@@ -34,11 +34,18 @@ onUnmounted(() => {
     <div
       class="text-center mt-5 mb-7"
     >
-      <h1 
-          class="text-4xl font-medium mb-1"
+      <div
+        class="flex items-center justify-center gap-1"
       >
-          Databases
-      </h1>
+        <img 
+          src="/icon.svg"
+        />
+        <h1 
+          class="text-4xl font-medium mb-1"
+        >
+        Database Center
+        </h1>
+      </div>
       <p
         class="text-[#8C8E98]"
       >

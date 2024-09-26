@@ -100,17 +100,49 @@ const handleStartContainer = async () => {
        <UiTooltip
         title="Coming soon"
        >
-        <button 
-            class="text-[#8C8E98] opacity-50 cursor-not-allowed"
-            disabled
-          >
-            <Icon 
-              name="ri:database-line"
-              size="20" 
-            />
-          </button>
+        <NuxtLink
+          :href="`/editor/${container.Id}`"
+          class="text-[#8C8E98] opacity-50 cursor-not-allowed"
+          disabled
+        >
+          <Icon 
+            name="bi:diagram-2"
+            size="20" 
+          />
+        </NuxtLink>
        </UiTooltip>
       <!-- editor button -->
+
+      <!-- delete button -->
+      <UiTooltip
+        title="Delete database"
+      >
+        <button 
+          class="text-[#8C8E98] hover:text-white"
+        >
+          <Icon 
+            name="solar:trash-bin-2-outline" 
+            size="20" 
+          />
+        </button>
+      </UiTooltip>
+      <!-- delete button -->
+
+      <!-- copy connection string button -->
+      <UiTooltip
+        title="Copy connection string"
+      >
+        <button 
+          class="text-[#8C8E98] hover:text-white"
+        >
+          <Icon 
+            name="solar:copy-linear" 
+            size="20" 
+          />
+        </button>
+      </UiTooltip>
+      <!-- copy connection string button -->
+
       <!-- start button -->
       <UiTooltip
         :title="loading ? 'Loading...' : container.State === 'running' ? 'Shutdown database' : 'Start database'"

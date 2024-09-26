@@ -1,5 +1,6 @@
 import type { CreateMysqlPayload } from "~/types/dockerApi";
 import Docker from "dockerode"
+import { randomBytes } from "crypto";
 
 const docker = new Docker()
 
@@ -10,6 +11,7 @@ export const createMysqlContainer = async (payload: string) => {
         databasePassword,
         databaseUser,
     }: CreateMysqlPayload = JSON.parse(payload);
+    const volumeName = `DatabaseCenter-mysql-${randomBytes(8).toString('hex')}`
 
     
     // check if correct data is recieved
@@ -52,29 +54,46 @@ export const createMysqlContainer = async (payload: string) => {
     }
 
     // Create volume
+    try {
+      const res = await docker.createVolume({
+        Name: volumeName,
+      })
+      console.log(res);
+      
+    } catch (error) {
+      console.log('error');
+      console.log(error);
+      
+    }
 
     // Create container
-    try {
-        await docker.createContainer({
-            Image: 'mysql:latest',
-            name: databaseName as string,
-            Env: [
-              `MYSQL_ROOT_PASSWORD=${databasePassword}`, // Root password
-              `MYSQL_DATABASE=tables`,         // Database name
-              `MYSQL_USER=${databaseUser}`,                 // MySQL user
-              `MYSQL_PASSWORD=${databasePassword}`          // MySQL user password
-            ],
-            ExposedPorts: {
-              '3306/tcp': {}
-            },
-            HostConfig: {
-              PortBindings: {
-                '3306/tcp': [{ HostPort: `${databasePort}` }]
-              }
-            }
-          });
-        return "success"
-    } catch (error) {
-        return `error: ${error}`
-    }
+    // Create container
+try {
+  await docker.createContainer({
+      Image: 'mysql:latest',
+      name: databaseName as string,
+      Env: [
+        `MYSQL_ROOT_PASSWORD=${databasePassword}`, // Root password
+        `MYSQL_DATABASE=tables`,         // Database name
+        `MYSQL_USER=${databaseUser}`,    // MySQL user
+        `MYSQL_PASSWORD=${databasePassword}`  // MySQL user password
+      ],
+      ExposedPorts: {
+        '3306/tcp': {}
+      },
+      HostConfig: {
+        PortBindings: {
+          '3306/tcp': [{ HostPort: `${databasePort}` }]
+        },
+        Binds: [`${volumeName}:/var/lib/mysql`] // Bind the volume to MySQL's data directory
+      },
+      Volumes: {
+        '/var/lib/mysql': {} // Specify the mount point inside the container
+      }
+    });
+  return "success"
+} catch (error) {
+  return `error: ${error}`
+}
+
 }

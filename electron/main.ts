@@ -16,6 +16,7 @@ app.whenReady().then(() => {
       preload: path.join(dirname, "/preload.js"),
       nodeIntegration: true,
     },
+    icon: path.join(dirname, '../public/favicon.png'),
     autoHideMenuBar: true,
   }).loadURL(process.env.VITE_DEV_SERVER_URL!);
 });
