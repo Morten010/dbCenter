@@ -6,4 +6,6 @@ export type databaseStoreProps = {
     database: 'mysql'; // Add others later like postgresql
     version: '9.0.0' |'8.4.1'; // 
     volumeName: string;
+    status: 'loading' | 'off' | 'on'
+    containerId: string | null;
 }

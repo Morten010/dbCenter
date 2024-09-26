@@ -1,5 +1,6 @@
 <script setup lang='ts'>
 import { toast } from 'vue-sonner'
+import { useDbStore } from '~/store/dbStore';
 const open = ref(false)
 const dbFormData = reactive({
     databaseName: "",
@@ -7,6 +8,8 @@ const dbFormData = reactive({
     databasePassword: 'mypassword',
     databaseUser: 'admin'
 })
+
+const useDb = useDbStore()
 
 const handleSubmit = async (e: Event) => {
     e.preventDefault()
@@ -16,12 +19,9 @@ const handleSubmit = async (e: Event) => {
     if(dbFormData.databasePort.toString().length !== 4) return toast.error('Port must be 4 numbers, 3306 is suggested.')
     if(!dbFormData.databaseUser.length) return toast.error('Missing user')
 
-    const promise = await useDocker.createMysqlContainer(JSON.stringify(dbFormData))
+    const res = await useDb.addDatabase(dbFormData)
 
-    console.log(promise);
-    
-
-    toast.success('You are invited to the diddy freak off')
+    if(res) return open.value = false 
 }
 
 

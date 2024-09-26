@@ -4,6 +4,9 @@ import { fileURLToPath } from "url";
 import Docker from "dockerode";
 import type { CreateMysqlPayload } from "~/types/dockerApi";
 import { createMysqlContainer } from "./docker/CreateMysqlContainer";
+import StartMysqlDatabase from "./docker/StartMysqlDatabase";
+import type { databaseStoreProps } from "~/types/store";
+import stopMysqlDatabase from "./docker/StopMysqlDatabase";
 
 const docker = new Docker();
 
@@ -49,38 +52,23 @@ ipcMain.handle('docker/create/mysql', async (event, args) => {
   return await createMysqlContainer(args)
 })
 
-ipcMain.handle('docker/start/mysql', async (event, id) => {
+ipcMain.handle('docker/start/mysql', async (event, payload: string) => {
   try {
-    const container = docker.getContainer(id)
+    const db: databaseStoreProps = JSON.parse(payload)
+    console.log(db);
+    
 
-    await container.start()
-
-    return {
-      success: true,
-      message: 'Successfully started container'
-    }
+    return await StartMysqlDatabase(db)
   } catch (error) {
+    console.log(error);
+    
     return {
       success: true,
-      message: 'Failed to start container'
+      message: 'Failed to start database'
     }
   }
 })
 
-ipcMain.handle('docker/stop/mysql', async (event, id) => {
-  try {
-    const container = docker.getContainer(id)
-
-    await container.stop()
-
-    return {
-      success: true,
-      message: 'Successfully shutdown container'
-    }
-  } catch (error) {
-    return {
-      success: true,
-      message: 'Failed to shutdown container'
-    }
-  }
+ipcMain.handle('docker/stop/mysql', async (event, containerId) => {
+  return await stopMysqlDatabase(containerId)
 })

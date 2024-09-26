@@ -5,71 +5,71 @@ import { randomBytes } from "crypto";
 const docker = new Docker()
 
 export const createMysqlContainer = async (payload: string) => {
-    const {
-        databaseName,
-        databasePort,
-        databasePassword,
-        databaseUser,
-    }: CreateMysqlPayload = JSON.parse(payload);
-    const volumeName = `DatabaseCenter-mysql-${randomBytes(8).toString('hex')}`
+  console.log('create');
 
-    
-    // check if correct data is recieved
-    if(!databaseName) return {
-        success: false,
-        message: 'Database name is wrong'
-    }
-    if(!databasePort) return {
-        success: false,
-        message: 'Database port is wrong'
-    }
-    if(!databasePassword) return {
-        success: false,
-        message: 'Database password is wrong'
-    }
-    if(!databaseUser) return {
-        success: false,
-        message: 'Database user is wrong'
-    }
+  const {
+    databaseName,
+    databasePort,
+    databasePassword,
+    databaseUser,
+  }: CreateMysqlPayload = JSON.parse(payload)
+  const volumeName = `DatabaseCenter-mysql-${randomBytes(8).toString('hex')}`
 
-    // pull mysql instance if it dosen't exist
-    try {
-        await docker.pull('mysql:latest', (err: any, stream: any) => {
-            if (err) {
-              console.error('Error pulling MySQL image:', err);
-              return;
-            }
-            docker.modem.followProgress(stream, (err, res) => {
-              if (err) {
-                console.error('Pull progress error:', err)
-                return 'Failed to pull mysql image'
-            };
-            });
-          });
-    } catch (error) {
-        return {
-            success: false,
-            message: 'Something went wrong trying to create the database'
-        }
-    }
 
-    // Create volume
-    try {
-      const res = await docker.createVolume({
-        Name: volumeName,
-      })
-      console.log(res);
-      
-    } catch (error) {
-      console.log('error');
-      console.log(error);
-      
-    }
+  // check if correct data is recieved
+  if (!databaseName) return {
+    success: false,
+    message: 'Database name is wrong'
+  }
+  if (!databasePort) return {
+    success: false,
+    message: 'Database port is wrong'
+  }
+  if (!databasePassword) return {
+    success: false,
+    message: 'Database password is wrong'
+  }
+  if (!databaseUser) return {
+    success: false,
+    message: 'Database user is wrong'
+  }
 
-    // Create container
-    // Create container
-try {
-  await docker.createContainer({
+  // pull mysql instance if it dosen't exist
+  try {
+    await docker.pull('mysql:latest', (err: any, stream: any) => {
+      if (err) {
+        console.error('Error pulling MySQL image:', err);
+        return;
+      }
+      docker.modem.followProgress(stream, (err, res) => {
+        if (err) {
+          console.error('Pull progress error:', err)
+          return 'Failed to pull mysql image'
+        };
+      });
+    });
+  } catch (error) {
+    return {
+      success: false,
+      message: 'Something went wrong trying to create the database'
+    }
+  }
+
+  // Create volume
+  try {
+    const res = await docker.createVolume({
+      Name: volumeName,
+    })
+    console.log(res);
+
+  } catch (error) {
+    console.log('error');
+    console.log(error);
+  }
+
+  // Create container
+  try {
+    const container = await docker.createContainer({
       Image: 'mysql:latest',
       name: databaseName as string,
       Env: [
@@ -91,9 +91,20 @@ try {
         '/var/lib/mysql': {} // Specify the mount point inside the container
       }
     });
-  return "success"
-} catch (error) {
-  return `error: ${error}`
-}
+
+    await container.remove()
+
+    console.log('container id: ' + container.id);
+    
+    return {
+      success: true,
+      message: 'Successfully created database',
+      data: {
+        volumeName,
+      }
+    }
+  } catch (error) {
+    return `error: ${error}`
+  }
 
 }

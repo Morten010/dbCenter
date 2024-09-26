@@ -1,30 +1,11 @@
 <script setup lang="ts">
-import type Dockerode from 'dockerode';
+import { useDbStore } from '~/store/dbStore';
 
-const containers = ref<Dockerode.ContainerInfo[]>([])
 
-const getContainers = async () => {
-  containers.value = await useDocker.getAllContainers();
-}
+const dbStore = useDbStore()
 
-console.log(containers);
-
-onBeforeMount(() => {
-  getContainers()  
-})
-
-let intervalId:  NodeJS.Timeout | string | number | undefined;
-
-onMounted(() => {
-  intervalId = setInterval(() => {
-    getContainers()
-  }, 1000) as unknown as number
-})
-
-onUnmounted(() => {
-  clearInterval(intervalId)
-})
 </script>
+
 
 <!-- homepage -->
 <template>
@@ -55,15 +36,15 @@ onUnmounted(() => {
 
     <div
       class="grid grid-cols-2 gap-4"
-      v-if="!!containers.length"
+      v-if="!!dbStore.allDatabases.length"
     >
       <ContainerCard 
-        v-for="container in containers"
-        :container="container"
+        v-for="database in dbStore.allDatabases"
+        :database="database"
       />
     </div>
     <div
-      v-if="!containers.length"
+      v-if="!dbStore.allDatabases.length"
       class="my-10"
     >
       <img 

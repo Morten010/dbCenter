@@ -3,3 +3,7 @@ export const sideNavConsts = [
     'Users',
     'Products'
 ]
+
+const databaseStore = {
+    
+}

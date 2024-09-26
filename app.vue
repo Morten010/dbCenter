@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { Toaster } from 'vue-sonner'
+import { useDbStore } from './store/dbStore';
 
 const status = ref<'loading' | 'error' | 'success'>('loading')
 

@@ -1,43 +1,20 @@
 <script setup lang="ts">
 import type Dockerode from 'dockerode';
 import { toast } from 'vue-sonner';
+import { useDbStore } from '~/store/dbStore';
+import type { databaseStoreProps } from '~/types/store';
 
-const loading = ref(false)
-
-const { container } = defineProps<{
-  container: Dockerode.ContainerInfo
+const { database } = defineProps<{
+  database: databaseStoreProps
 }>()
-console.log(container);
 
-const handleStartContainer = async () => {
-  loading.value = true
-  
-    
-  if(container.State !== 'running') {
-    const res: {
-      message: string,
-      success: boolean
-    } = await useDocker.startContainer(container.Id)
+const { startDatabase, stopDatabase } = useDbStore()
 
-    if(!res.success) return toast.error(res.message)
-
-    toast.success('Database is starting up🚀')
-    loading.value = false
-    return
-  }
-  if(container.State === 'running') {
-    const res: {
-      message: string,
-      success: boolean
-    } = await useDocker.stopContainer(container.Id)
-
-    if(!res.success) return toast.error(res.message)
-
-    toast.success('Database is shutting down🛬')
-    loading.value = false
-    return
-  }
+const handleCopyConnectionString = () => {
+  navigator.clipboard.writeText(`mysql://${database.user}:${database.password}@127.0.0.1:${database.port}/tables`)
+  toast.success('Copied connection string to clipboard')
 }
+
 </script>
 
 <template>
@@ -52,7 +29,7 @@ const handleStartContainer = async () => {
           <h2
             class="font-semibold"
           >
-            {{ container.Names[0].replace('/', '') }}
+            {{ database.name }}
           </h2>
           <p
             class="text-sm text-[#8C8E98]"
@@ -71,9 +48,9 @@ const handleStartContainer = async () => {
               :class="cn(
                 'w-1.5 h-1.5 rounded-full animate-ping transition-colors duration-200',
                 {
-                  'bg-green-600': container.State === 'running' && !loading,
-                  'bg-yellow-500': loading,
-                  'bg-red-600': container.State !== 'running' && !loading
+                  'bg-green-600': database.status === 'on',
+                  'bg-yellow-500': database.status === 'loading',
+                  'bg-red-600': database.status === 'off'
                 }
               )"
             />
@@ -81,9 +58,9 @@ const handleStartContainer = async () => {
               :class="cn(
                 'w-1.5 h-1.5 rounded-full absolute left-0 top-0 transition-colors duration-200',
                 {
-                  'bg-green-600': container.State === 'running' && !loading,
-                  'bg-yellow-500': loading,
-                  'bg-red-600': container.State !== 'running' && !loading
+                  'bg-green-600': database.status === 'on',
+                  'bg-yellow-500': database.status === 'loading',
+                  'bg-red-600': database.status === 'off'
                 }
               )"
             />
@@ -101,7 +78,7 @@ const handleStartContainer = async () => {
         title="Coming soon"
        >
         <NuxtLink
-          :href="`/editor/${container.Id}`"
+          :href="`/editor/${database.volumeName}`"
           class="text-[#8C8E98] opacity-50 cursor-not-allowed"
           disabled
         >
@@ -134,6 +111,7 @@ const handleStartContainer = async () => {
       >
         <button 
           class="text-[#8C8E98] hover:text-white"
+          @click="handleCopyConnectionString"
         >
           <Icon 
             name="solar:copy-linear" 
@@ -145,28 +123,28 @@ const handleStartContainer = async () => {
 
       <!-- start button -->
       <UiTooltip
-        :title="loading ? 'Loading...' : container.State === 'running' ? 'Shutdown database' : 'Start database'"
+        :title="database.status === 'loading' ? 'Loading...' : database.status === 'on' ? 'Shutdown database' : 'Start database'"
       >
         <button 
           class="text-[#8C8E98] hover:text-white"
-          @click="handleStartContainer"
-          :disabled="loading"
+          @click="() => database.status === 'off' ? startDatabase(database.volumeName) : stopDatabase(database.containerId!)"
+          :disabled="database.status === 'loading'"
         >
           <Icon 
             name="solar:play-linear" 
             size="20" 
-            v-if="!loading && container.State !== 'running'"
+            v-if="database.status === 'off'"
           />
           <Icon 
             name ="mingcute:pause-line" 
             size="20" 
-            v-if="!loading && container.State === 'running'"
+            v-if="database.status === 'on'"
           />
           <Icon 
             name="fluent:spinner-ios-20-regular"
             size="20"
             class="animate-spin"
-            v-if="loading"
+            v-if="database.status === 'loading'"
           />
         </button>
       </UiTooltip>
