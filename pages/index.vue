@@ -5,10 +5,10 @@ const containers = await useDocker.getAllContainers();
 <!-- homepage -->
 <template>
   <div 
-    class="w-full flex p-2"
+    class="w-full flex flex-col p-2"
 >
     <h1 
-        class="text-2xl font-semibold"
+        class="text-2xl font-semibold mb-2"
     >
         Databases
     </h1>
@@ -17,6 +17,7 @@ const containers = await useDocker.getAllContainers();
       <div v-for="container in containers">
         {{ container.Names[0].replace("/", "") }}
       </div>
+      <ContainerCard />
     </div>
 
     <button

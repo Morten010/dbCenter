@@ -14,6 +14,7 @@ app.whenReady().then(() => {
       preload: path.join(dirname, "/preload.js"),
       nodeIntegration: true,
     },
+    autoHideMenuBar: true,
   }).loadURL(process.env.VITE_DEV_SERVER_URL!);
 });
 
