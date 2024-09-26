@@ -32,7 +32,7 @@ export const useDbStore = defineStore('dbStore', {
             
             if(!res.success) return toast.error(res.message)
 
-            toast.success('You are invited to the diddy freak off')
+            toast.success('Successfully created database💥')
              this.databases = [...this.databases, {
                 database: 'mysql',
                 name: db.databaseName,
