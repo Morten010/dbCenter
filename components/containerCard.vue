@@ -40,7 +40,8 @@ const handleStartContainer = async () => {
 </script>
 
 <template>
-  <div class="flex flex-col py-[10px] px-[20px] border border-[#1D1E24] rounded-[8px] gap-[14px]">
+  <div class="flex flex-col py-[10px] px-[20px] border border-[#1D1E24] rounded-[8px] gap-[14px] relative">
+
     <!-- top -->
      <div
       class="flex gap-5 items-center"
@@ -57,6 +58,33 @@ const handleStartContainer = async () => {
           >
             Mysql 9.x.x @ 3306
           </p>
+        </div>
+
+        <div
+          class="self-center ml-auto"
+        >
+          <div
+            class="relative"
+          >
+            <div 
+              :class="cn(
+                'bg-red-600 w-1.5 h-1.5 rounded-full animate-ping transition-colors duration-200',
+                {
+                  'bg-green-600': container.State === 'running',
+                  'bg-yellow-500': loading
+                }
+              )"
+            />
+            <div 
+              :class="cn(
+                'bg-red-600 w-1.5 h-1.5 rounded-full absolute left-0 top-0 transition-colors duration-200',
+                {
+                  'bg-green-600': container.State === 'running',
+                  'bg-yellow-500': loading
+                }
+              )"
+            />
+          </div>
         </div>
      </div>
     <!-- top -->

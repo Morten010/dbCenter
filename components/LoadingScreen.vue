@@ -7,7 +7,7 @@
   >
     <Icon 
         name="fluent:spinner-ios-20-regular"
-        size="38"
+        size="48"
         class="animate-spin"
     />
   </div>
