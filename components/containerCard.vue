@@ -1,27 +1,35 @@
 <script setup lang="ts"></script>
 
 <template>
-  <div class="flex justify-between items-center">
-    <!-- left -->
-    <div class="flex gap-2 items-center">
-      <div
-        class="border rounded-lg w-[60px] h-[60px] grid place-content-center">
+  <div class="flex flex-col py-[10px] px-[20px] border border-[#1D1E24] rounded-[8px] gap-[14px]">
+    <!-- top -->
+     <div
+      class="flex gap-5 items-center"
+     >
         <Icon name="devicon:mysql" size="38" />
-      </div>
-      <div>
-        <h1 class="font-semibold">Database name</h1>
-        <p>Mysql 9.x.x @ 3306</p>
-      </div>
-    </div>
-    <!-- left -->
+        <div>
+          <h2
+            class="font-semibold"
+          >
+            Database name
+          </h2>
+          <p
+            class="text-sm text-[#8C8E98]"
+          >
+            Mysql 9.x.x @ 3306
+          </p>
+        </div>
+     </div>
+    <!-- top -->
 
-    <!-- right -->
+    <!-- bottom -->
     <div
-      class="flex gap-1 items-center"
+      class="flex gap-1 items-center justify-end"
     >
       <!-- editor button -->
         <button 
-          class="border rounded-lg w-9 h-9 grid place-content-center"
+          class="text-[#8C8E98] opacity-50 cursor-not-allowed"
+          disabled
         >
           <Icon 
             name="ri:database-line"
@@ -30,11 +38,11 @@
         </button>
       <!-- editor button -->
       <!-- start button -->
-      <button class="border rounded-lg w-9 h-9 grid place-content-center">
+      <button class="text-[#8C8E98]">
         <Icon name="solar:play-linear" size="20" />
       </button>
       <!-- start button -->
     </div>
-    <!-- right -->
+    <!-- bottom -->
   </div>
 </template>

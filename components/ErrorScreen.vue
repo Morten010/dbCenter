@@ -3,7 +3,7 @@
 
 <template>
   <div
-    class="min-h-screen text-center grid place-content-center"
+    class="min-h-screen text-center grid place-content-center bg-[#101014] text-white"
   >
     <Icon 
         name="logos:docker-icon" 
@@ -16,7 +16,7 @@
         Failed to connect to docker
     </h1>
     <p
-        class="text-black/70"
+        class="text-[#8C8E98]"
     >
         We couldn’t connect to Docker, Open docker desktop to make a connection.
     </p>
