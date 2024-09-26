@@ -9,7 +9,7 @@ const DOCKER_API: DockerApiProps = {
     createMysqlContainer: (x) => ipcRenderer.invoke('docker/create/mysql', x),
     deleteMysqlContainer: () => "deleted mysql container",
     getAllContainers: () => ipcRenderer.invoke('docker/list'),
-    checkConnection: () => ipcRenderer.invoke('docker/ping')
+    checkConnection: () => ipcRenderer.invoke('docker/ping'),
 }
 
 contextBridge.exposeInMainWorld('docker', DOCKER_API)

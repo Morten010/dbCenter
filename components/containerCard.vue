@@ -7,11 +7,12 @@ const loading = ref(false)
 const { container } = defineProps<{
   container: Dockerode.ContainerInfo
 }>()
+console.log(container);
 
 const handleStartContainer = async () => {
   loading.value = true
   
-  
+    
   if(container.State !== 'running') {
     const res: {
       message: string,
@@ -68,19 +69,21 @@ const handleStartContainer = async () => {
           >
             <div 
               :class="cn(
-                'bg-red-600 w-1.5 h-1.5 rounded-full animate-ping transition-colors duration-200',
+                'w-1.5 h-1.5 rounded-full animate-ping transition-colors duration-200',
                 {
-                  'bg-green-600': container.State === 'running',
-                  'bg-yellow-500': loading
+                  'bg-green-600': container.State === 'running' && !loading,
+                  'bg-yellow-500': loading,
+                  'bg-red-600': container.State !== 'running' && !loading
                 }
               )"
             />
             <div 
               :class="cn(
-                'bg-red-600 w-1.5 h-1.5 rounded-full absolute left-0 top-0 transition-colors duration-200',
+                'w-1.5 h-1.5 rounded-full absolute left-0 top-0 transition-colors duration-200',
                 {
-                  'bg-green-600': container.State === 'running',
-                  'bg-yellow-500': loading
+                  'bg-green-600': container.State === 'running' && !loading,
+                  'bg-yellow-500': loading,
+                  'bg-red-600': container.State !== 'running' && !loading
                 }
               )"
             />
