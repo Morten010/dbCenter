@@ -27,20 +27,28 @@
       class="flex gap-1 items-center justify-end"
     >
       <!-- editor button -->
+       <UiTooltip
+        title="Coming soon"
+       >
         <button 
-          class="text-[#8C8E98] opacity-50 cursor-not-allowed"
-          disabled
-        >
-          <Icon 
-            name="ri:database-line"
-            size="20" 
-          />
-        </button>
+            class="text-[#8C8E98] opacity-50 cursor-not-allowed"
+            disabled
+          >
+            <Icon 
+              name="ri:database-line"
+              size="20" 
+            />
+          </button>
+       </UiTooltip>
       <!-- editor button -->
       <!-- start button -->
-      <button class="text-[#8C8E98]">
-        <Icon name="solar:play-linear" size="20" />
-      </button>
+      <UiTooltip
+        title="Start database"
+      >
+        <button class="text-[#8C8E98]">
+          <Icon name="solar:play-linear" size="20" />
+        </button>
+      </UiTooltip>
       <!-- start button -->
     </div>
     <!-- bottom -->
