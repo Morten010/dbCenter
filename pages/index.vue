@@ -32,7 +32,7 @@ const containers = await useDocker.getAllContainers();
     </div>
 
     <button
-        class="fixed bottom-2 right-2 grid place-content-center bg-[#465ED6] rounded-full p-1 text-[#101014]"
+        class="fixed bottom-5 right-5 grid place-content-center bg-[#465ED6] rounded-full p-1 text-[#101014]"
     >
         <Icon 
             name="lucide:plus" 

@@ -1,5 +1,9 @@
 {
   "name": "DbCenter",
+  "description": "Database management gui",
+  "author": {
+    "name": "Morten Rasmussen"
+  },
   "private": true,
   "version": "0.0.1",
   "type": "commonjs",

@@ -4,7 +4,7 @@ import { electronConfig } from "./configs/Electron";
 export default defineNuxtConfig({
   compatibilityDate: '2024-04-03',
   modules: ['nuxt-electron', '@nuxt/icon', '@nuxtjs/tailwindcss'], 
-  devtools: { enabled: true },
+  devtools: { enabled: false },
   electron: electronConfig,
   ssr: false
 })
