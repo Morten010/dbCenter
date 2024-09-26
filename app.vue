@@ -1,19 +1,6 @@
 <script setup lang="ts">
-const status = ref("...")
+const containers = await useDocker.getAllContainers()
 
-
-const handleStartContainer = () => {
-  const answer = useDocker.startContainer()
-  status.value = answer
-}
-const handleStopContainer = () => {
-  const answer =  useDocker.stopContainer()
-  status.value = answer
-}
-
-const createContainer = async () => {
-  console.log("running");
-}
 </script>
 
 <template>
@@ -21,25 +8,13 @@ const createContainer = async () => {
     <h1>
       Containers
     </h1>
-    <p>
-      {{ status }}
-    </p>
-
-    <button
-      @click="handleStartContainer"
-    >
-      Start container
-    </button>
-    <button
-      @click="handleStopContainer"
-    >
-      Stop container
-    </button>
-    <br>
-    <button
-      @click="createContainer"
-    >
-      Create mysql container
-    </button>
+    
+    <div>
+      <div
+        v-for="container in containers"
+      >
+        {{ container.Names[0].replace('/', '') }}
+      </div>
+    </div>
   </div>
 </template>
