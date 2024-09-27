@@ -8,7 +8,7 @@ const { database } = defineProps<{
   database: databaseStoreProps
 }>()
 
-const { startDatabase, stopDatabase } = useDbStore()
+const { startDatabase, stopDatabase, deleteDatabase } = useDbStore()
 
 const handleCopyConnectionString = () => {
   navigator.clipboard.writeText(`mysql://${database.user}:${database.password}@127.0.0.1:${database.port}/tables`)
@@ -96,6 +96,7 @@ const handleCopyConnectionString = () => {
       >
         <button 
           class="text-[#8C8E98] hover:text-white"
+          @click="deleteDatabase(database.volumeName)"
         >
           <Icon 
             name="solar:trash-bin-2-outline" 

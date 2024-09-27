@@ -7,6 +7,7 @@ import { createMysqlContainer } from "./docker/CreateMysqlContainer";
 import StartMysqlDatabase from "./docker/StartMysqlDatabase";
 import type { databaseStoreProps } from "~/types/store";
 import stopMysqlDatabase from "./docker/StopMysqlDatabase";
+import { deleteMysqlDatabase } from "./docker/DeleteMysqlDatabase";
 
 const docker = new Docker();
 
@@ -71,4 +72,10 @@ ipcMain.handle('docker/start/mysql', async (event, payload: string) => {
 
 ipcMain.handle('docker/stop/mysql', async (event, containerId) => {
   return await stopMysqlDatabase(containerId)
+})
+
+ipcMain.handle('docker/delete/mysql', (event, payload) => {
+  const db: databaseStoreProps = JSON.parse(payload) 
+
+  return deleteMysqlDatabase(db)
 })

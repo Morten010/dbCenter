@@ -27,7 +27,10 @@ export type DockerApiProps = {
         success: false,
         message: string,
     }>;
-    deleteMysqlContainer: () => string;
+    deleteMysqlContainer: (x: string) => Promise<{
+        success: boolean,
+        message: string
+    }>;
     getAllContainers: () => Promise< Dockerode.ContainerInfo[]>;
     checkConnection: () => Promise<boolean>;
 }

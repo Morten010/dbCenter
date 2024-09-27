@@ -108,7 +108,8 @@ export const useDbStore = defineStore('dbStore', {
             // set loading
             this.updateDatabase({
                 ...db,
-                status: 'off'
+                status: 'off',
+                containerId: null
             })
             return
         },
@@ -119,10 +120,23 @@ export const useDbStore = defineStore('dbStore', {
                 return updatedDb
             })]
         },
-        deleteDatabase(volumeName: string) {
+        async deleteDatabase(volumeName: string) {
             // ! remove database volume
+            const db = this.getSpecificContainer(volumeName)
 
-            this.databases = this.databases.filter(db => db.volumeName === volumeName)
+            if(!db) return toast('Failed to find database🔍')
+
+            const payload = JSON.stringify(db)
+
+            const res = await useDocker.deleteMysqlContainer(payload)
+
+            if(!res.success) return toast.error('Failed to delete database😵')
+
+            toast.success('Successfully deleted🥇')
+
+            console.log();
+            
+            this.databases = this.databases.filter(db => db.volumeName !== volumeName)
         },
     }
 })
