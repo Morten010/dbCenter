@@ -33,6 +33,10 @@ export type DockerApiProps = {
     }>;
     getAllContainers: () => Promise< Dockerode.ContainerInfo[]>;
     checkConnection: () => Promise<boolean>;
+    syncMysql(): Promise<{
+        Volumes: Dockerode.VolumeInspectInfo[];
+        Warnings: string[];
+    }>
 }
 
 export type CreateMysqlPayload = {

@@ -16,4 +16,14 @@ export default defineNuxtConfig({
   alias: {
     pinia: "/node_modules/@pinia/nuxt/node_modules/pinia/dist/pinia.mjs"
   },
+  experimental: {
+    appManifest: false,
+    payloadExtraction: false
+  },
+  router: {
+    options: {
+      hashMode: true, // prevent app from starting on 404 page
+    },
+  },
 })
+

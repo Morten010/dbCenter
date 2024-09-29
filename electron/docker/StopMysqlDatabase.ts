@@ -6,8 +6,6 @@ const docker = new Docker();
 const stopMysqlDatabase = async (containerId: string) => {
     try{
 
-        console.log(containerId);
-        
         const container = docker.getContainer(containerId)
 
         await container.stop()
@@ -19,8 +17,6 @@ const stopMysqlDatabase = async (containerId: string) => {
         }
 
     }catch(error){
-        
-        console.log(error);
         
         return {
             success: false,

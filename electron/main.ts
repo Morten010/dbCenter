@@ -1,81 +1,89 @@
+import Docker from "dockerode";
 import { app, BrowserWindow, ipcMain } from "electron";
 import path from "path";
-import { fileURLToPath } from "url";
-import Docker from "dockerode";
-import type { CreateMysqlPayload } from "~/types/dockerApi";
 import { createMysqlContainer } from "./docker/CreateMysqlContainer";
-import StartMysqlDatabase from "./docker/StartMysqlDatabase";
-import type { databaseStoreProps } from "~/types/store";
-import stopMysqlDatabase from "./docker/StopMysqlDatabase";
 import { deleteMysqlDatabase } from "./docker/DeleteMysqlDatabase";
+import { pingDocker } from "./docker/ping";
+import StartMysqlDatabase from "./docker/StartMysqlDatabase";
+import stopMysqlDatabase from "./docker/StopMysqlDatabase";
+import { syncMysql } from "./docker/syncMysql";
 
 const docker = new Docker();
 
-const filename = fileURLToPath(import.meta.url); // get the resolved path to the file
-const dirname = path.dirname(filename);
+process.env.APP_ROOT = path.join(__dirname, '..')
+
+export const MAIN_DIST = path.join(process.env.APP_ROOT, 'dist-electron')
+export const RENDERER_DIST = path.join(process.env.APP_ROOT, '.output/public')
+
+process.env.VITE_PUBLIC = process.env.VITE_DEV_SERVER_URL
+  ? path.join(process.env.APP_ROOT, 'public')
+  : RENDERER_DIST;
+
+let win: BrowserWindow | null;
+
+function createWindow() {
+  win = new BrowserWindow({
+    webPreferences: {
+      preload: path.join(MAIN_DIST, 'preload.js'),
+    },
+    icon: path.join(RENDERER_DIST, './favicon.png'),
+    autoHideMenuBar: true,
+  })
+
+  if (process.env.VITE_DEV_SERVER_URL) {
+    win.loadURL(process.env.VITE_DEV_SERVER_URL)
+    win.webContents.openDevTools()
+  } else {
+    win.loadFile(path.join(process.env.VITE_PUBLIC!, 'index.html'))
+  }
+}
+
+function initIpc() {
+  
+  // docker api
+  ipcMain.handle('docker/list', async () => {
+    const containers = await docker.listContainers({
+      all: true
+    });
+    
+    return containers;
+  })
+  ipcMain.handle('docker/ping', async () => {
+    return pingDocker()
+  })
+  ipcMain.handle('docker/create/mysql', async (event, args) => {
+    return await createMysqlContainer(args)
+  })
+  ipcMain.handle('docker/start/mysql', async (event, payload: string) => {
+    return await StartMysqlDatabase(JSON.parse(payload))
+  })
+  ipcMain.handle('docker/stop/mysql', async (event, containerId) => {
+    return await stopMysqlDatabase(containerId)
+  })
+  ipcMain.handle('docker/delete/mysql', (event, payload) => {
+    return deleteMysqlDatabase(JSON.parse(payload))
+  })
+  ipcMain.handle('docker/sync', () => {
+    return syncMysql()
+  })
+}
+
+
+
+app.on('window-all-closed', () => {
+  if (process.platform !== 'darwin') {
+    app.quit()
+    win = null
+  }
+})
+
+app.on('activate', () => {
+  if (BrowserWindow.getAllWindows().length === 0) {
+    createWindow()
+  }
+})
 
 app.whenReady().then(() => {
-  new BrowserWindow({
-    webPreferences: {
-      preload: path.join(dirname, "/preload.js"),
-      nodeIntegration: true,
-    },
-    icon: path.join(dirname, '../public/favicon.png'),
-    autoHideMenuBar: true,
-  }).loadURL(process.env.VITE_DEV_SERVER_URL!);
-});
-
-ipcMain.handle('docker/list', async () => {
-  const containers = await docker.listContainers({
-    all: true
-  });
-  
-  return containers;
-})
-
-
-ipcMain.handle('docker/ping', async () => {
-  try {
-    // Ping docker to check connection
-    const ping = await docker.ping();
-
-    // turn binary into string
-    const pingstr = Buffer.from(ping).toString("utf-8");
-
-    return pingstr === "OK";
-  } catch (error) {
-    return false
-  }
-})
-
-ipcMain.handle('docker/create/mysql', async (event, args) => {
-  
-  return await createMysqlContainer(args)
-})
-
-ipcMain.handle('docker/start/mysql', async (event, payload: string) => {
-  try {
-    const db: databaseStoreProps = JSON.parse(payload)
-    console.log(db);
-    
-
-    return await StartMysqlDatabase(db)
-  } catch (error) {
-    console.log(error);
-    
-    return {
-      success: true,
-      message: 'Failed to start database'
-    }
-  }
-})
-
-ipcMain.handle('docker/stop/mysql', async (event, containerId) => {
-  return await stopMysqlDatabase(containerId)
-})
-
-ipcMain.handle('docker/delete/mysql', (event, payload) => {
-  const db: databaseStoreProps = JSON.parse(payload) 
-
-  return deleteMysqlDatabase(db)
+  initIpc()
+  createWindow()
 })

@@ -5,8 +5,6 @@ import { randomBytes } from "crypto";
 const docker = new Docker()
 
 export const createMysqlContainer = async (payload: string) => {
-  console.log('create');
-
   const {
     databaseName,
     databasePort,
@@ -60,11 +58,8 @@ export const createMysqlContainer = async (payload: string) => {
     const res = await docker.createVolume({
       Name: volumeName,
     })
-    console.log(res);
 
   } catch (error) {
-    console.log('error');
-    console.log(error);
   }
 
   // Create container
@@ -94,8 +89,6 @@ export const createMysqlContainer = async (payload: string) => {
 
     await container.remove()
 
-    console.log('container id: ' + container.id);
-    
     return {
       success: true,
       message: 'Successfully created database',
