@@ -10,7 +10,9 @@ const choice = ref<null | {
     class="bg-[#101014] min-h-screen text-white max-w-[100vw] overflow-auto flex flex-col"
   >
     <!-- top nav -->
-     <NavigationTop />
+     <NavigationTop 
+        v-model="choice"
+     />
     <!-- top nav -->
 
     <div
@@ -24,7 +26,7 @@ const choice = ref<null | {
 
       <!-- content -->
         <div
-          class="flex-grow"
+          class="flex-grow max-w-[calc(100vw-200px)] max-h-[calc(100vh-56px)] overflow-auto"
         >
           <!-- empty -->
           <div
@@ -46,9 +48,14 @@ const choice = ref<null | {
           <!-- table -->
 
           <!-- diagram -->
+          <!-- https://vueflow.dev/ -->
           <!-- diagram -->
 
           <!-- query editor -->
+          <!-- https://github.surmon.me/vue-codemirror -->
+          <QueryEditor 
+            v-if="choice?.view === 'query'"
+          />
           <!-- query editor -->
         </div>
       <!-- content -->
