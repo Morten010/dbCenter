@@ -26,17 +26,11 @@ export const useDbStore = defineStore('dbStore', {
     },
     actions: {
         async addExistingDatabase(volumeName: string) {
-            this.databases = [...this.databases, {
-                database: 'mysql',
-                name: 'unknown db',
-                password: 'mypassword',
-                port: '3306',
-                status: 'off',
-                user: 'admin',
-                version: '9.0.0',
-                volumeName,
-                containerId: null
-            }]
+            console.log('volume: ', volumeName);
+            
+            const res = await useDocker.getConfig(volumeName)
+            console.log(res);
+            
             toast.success('Found database not added')
 
         },
@@ -44,6 +38,7 @@ export const useDbStore = defineStore('dbStore', {
             
             const res = await useDocker.createMysqlContainer(JSON.stringify(db)) 
             
+            console.log(res);
             
             if(!res.success) return toast.error(res.message)
 

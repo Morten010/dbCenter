@@ -8,22 +8,16 @@ const status = ref<'loading' | 'error' | 'success'>('loading')
 
 
 const sync = async () => {
-  const volumes = await useDocker.syncMysql()
-
-  const dbCenterVolumes: Dockerode.VolumeInspectInfo[] = []
-  const volumeDoNotExist: string[] = []
-
-  // find all volumes with connected with app
-  for(const volume of volumes.Volumes){
-    if(volume.Name.includes('DatabaseCenter')) {
-      dbCenterVolumes.push(volume)
-    }
-  }
-
+  const volumes = await useDocker.allVolumes()
+  console.error('syncing');
+  console.log(volumes);
+  
   // check what volumes already exists
-  for(const volume of dbCenterVolumes){
-    if(!dbNames.includes(volume.Name)){
-      await useDb.addExistingDatabase(volume.Name)
+  for(const volume of volumes){
+    if(!dbNames.includes(volume)){
+      console.log(volume);
+      
+      // await useDb.addExistingDatabase(volume)
     }
   }
 

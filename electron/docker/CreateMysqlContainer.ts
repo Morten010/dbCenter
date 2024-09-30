@@ -1,6 +1,7 @@
 import type { CreateMysqlPayload } from "~/types/dockerApi";
 import Docker from "dockerode"
 import { randomBytes } from "crypto";
+import { waitForMysql } from "../functions/waitForMysql";
 
 const docker = new Docker()
 
@@ -12,7 +13,8 @@ export const createMysqlContainer = async (payload: string) => {
     databaseUser,
   }: CreateMysqlPayload = JSON.parse(payload)
   const volumeName = `DatabaseCenter-mysql-${randomBytes(8).toString('hex')}`
-
+  const configDir = '/fuck/you';
+  const configFilePath = `${configDir}/config.json`;
 
   // check if correct data is recieved
   if (!databaseName) return {
@@ -60,6 +62,7 @@ export const createMysqlContainer = async (payload: string) => {
     })
 
   } catch (error) {
+    console.log('failed to create volume');
   }
 
   // Create container
@@ -86,7 +89,13 @@ export const createMysqlContainer = async (payload: string) => {
         '/var/lib/mysql': {} // Specify the mount point inside the container
       }
     });
-
+    await container.start()
+    try{
+      await waitForMysql('127.0.0.1', databasePort)
+    }catch(err){
+      console.log('err: ', err);
+    }
+    await container.stop()
     await container.remove()
 
     return {
@@ -97,7 +106,12 @@ export const createMysqlContainer = async (payload: string) => {
       }
     }
   } catch (error) {
-    return `error: ${error}`
+    console.log(error);
+    
+    return {
+      success: false,
+      message: 'Failed to create db'
+    }
   }
 
 }

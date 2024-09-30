@@ -76,9 +76,10 @@ const handleCopyConnectionString = () => {
       <!-- editor button -->
        <UiTooltip
         title="Coming soon"
+        v-if="database.status === 'on'"
        >
         <NuxtLink
-          :href="`/editor/${database.volumeName}`"
+          :href="false ? '#' : `/editor/${database.volumeName}`"
           class="text-[#8C8E98] opacity-50 cursor-not-allowed"
           disabled
         >

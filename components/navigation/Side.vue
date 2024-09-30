@@ -1,5 +1,17 @@
 <script setup lang='ts'>
-import { sideNavConsts } from '~/constants';
+const mysql = await useMysql()
+const model = defineModel<null | {
+    view: string,
+    name: string
+}>()
+
+const {
+    success,
+    data
+} = await mysql.query('SHOW TABLES;')
+
+console.log(model.value);
+
 </script>
 
 <template>
@@ -14,10 +26,22 @@ import { sideNavConsts } from '~/constants';
         >
             Table Content
         </h2>
-        <ul>
-            <li
-                class="flex gap-2 items-center text-sm text-[#4F5052] hover:text-white transition-all duration-150 cursor-pointer hover:pl-1"
-                v-for="table of sideNavConsts"
+        <div
+            class="flex flex-col"
+        >
+            <div
+                :class="cn(
+                    'flex gap-2 items-center text-sm text-[#4F5052] hover:text-white transition-all duration-150 cursor-pointer hover:pl-1',
+                    {
+                        'text-[#3952cf] pl-1': model?.name && model.name === table.Tables_in_tables
+                    }
+                )"
+                v-if="data"
+                v-for="table of data"
+                @click="model = {
+                    view: 'table',
+                    name: table.Tables_in_tables
+                }"
             >
                 <Icon 
                     name="ic:round-chevron-right" 
@@ -25,10 +49,10 @@ import { sideNavConsts } from '~/constants';
                     class="mt-0.5"
                 />
                 <p>
-                    {{ table }}
+                    {{ table.Tables_in_tables }}
                 </p>
-            </li>
-        </ul>
+            </div>
+        </div>
     </div>
 
     <div

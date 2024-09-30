@@ -6,7 +6,10 @@ import { deleteMysqlDatabase } from "./docker/DeleteMysqlDatabase";
 import { pingDocker } from "./docker/ping";
 import StartMysqlDatabase from "./docker/StartMysqlDatabase";
 import stopMysqlDatabase from "./docker/StopMysqlDatabase";
-import { syncMysql } from "./docker/syncMysql";
+import { allVolumes } from "./docker/allVolumes";
+import { readConfigFromVolume } from "./docker/getConfig";
+import type { databaseStoreProps } from "~/types/store";
+import mysql from 'mysql2/promise';
 
 const docker = new Docker();
 
@@ -51,20 +54,59 @@ function initIpc() {
   ipcMain.handle('docker/ping', async () => {
     return pingDocker()
   })
-  ipcMain.handle('docker/create/mysql', async (event, args) => {
+  ipcMain.handle('docker/create/mysql', async (_event, args) => {
     return await createMysqlContainer(args)
   })
-  ipcMain.handle('docker/start/mysql', async (event, payload: string) => {
+  ipcMain.handle('docker/start/mysql', async (_event, payload: string) => {
     return await StartMysqlDatabase(JSON.parse(payload))
   })
-  ipcMain.handle('docker/stop/mysql', async (event, containerId) => {
+  ipcMain.handle('docker/stop/mysql', async (_event, containerId) => {
     return await stopMysqlDatabase(containerId)
   })
-  ipcMain.handle('docker/delete/mysql', (event, payload) => {
+  ipcMain.handle('docker/delete/mysql', (_event, payload) => {
     return deleteMysqlDatabase(JSON.parse(payload))
   })
-  ipcMain.handle('docker/sync', () => {
-    return syncMysql()
+  ipcMain.handle('docker/volumes/all', () => {
+    return allVolumes()
+  })
+  ipcMain.handle('docker/getConfig', (_event, volumeName) => {
+    return readConfigFromVolume(volumeName)
+  })
+
+  // Mysql api
+  ipcMain.handle('mysql/query', async (_event, payload) => {
+    const {
+      db,
+      query
+    }: {
+      db: databaseStoreProps,
+      query: string
+    } = JSON.parse(payload)
+
+    const connection = await mysql.createConnection({
+      host: 'localhost',
+      user: db.user,
+      password: db.password,
+      database: 'tables',
+    });
+
+    try {
+      const [results, fields] = await connection.query(
+        query
+      );
+    
+      return {
+        success: true,
+        data: results,
+        fields: fields,
+        message: 'Success'
+      }
+  } catch (err) {
+      return {
+        success: false,
+        message: 'Failed to connect to mysql database'
+      }
+  }
   })
 }
 
