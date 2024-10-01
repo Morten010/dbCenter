@@ -2,6 +2,12 @@
 import { Codemirror } from 'vue-codemirror';
 import { sql, type SQLConfig } from "@codemirror/lang-sql"
 const code = ref<string>('')
+const loading = ref<boolean>(false)
+const messages = ref<{
+  message: string
+  time?: number
+  // add more later if needed
+}[]>([])
 
 const mysql = await useMysql()
 
@@ -9,32 +15,91 @@ const res = await mysql.query('SHOW TABLES;')
 const data: null | {
   Tables_in_tables: string
 }[] = res.data
-console.log(res);
-console.log(res);
 
 const sqlConfig: SQLConfig = {
   tables: data ? data.map(table => ({
     label: table.Tables_in_tables,
     displayLabel: table.Tables_in_tables,
-    
+
   })) :  [],
 
 }
-console.log(sqlConfig);
 
+const handleRunQuery = async () => {
+  loading.value = true;
+
+  messages.value = [...messages.value, 
+    {
+      message: 'Starting query'
+    }
+  ]
+  const first = performance.now()
+  const res = await mysql.query(code.value)
+  const second = performance.now()
+
+  messages.value = [...messages.value, 
+    {
+      message: res.success ? res.message : res.error as string,
+      time: second - first
+    }
+  ]
+  
+  loading.value = false;
+}
 
 </script>
 
 <template>
-  <codemirror 
-    v-model="code"
-    placeholder="Sql query here"
-    :indent-with-tab="true"
-    :tab-size="2"
-    lang="sql"
-    :extensions="[
-      sql(sqlConfig),
-      dbCenterQueryTheme
-    ]"
-  />
+  <div
+    class="flex-grow relative h-full flex flex-col justify-between"
+  >
+    <div
+      class="max-h-[calc(100vh-260px)] overflow-auto"
+    >
+      <codemirror 
+        v-model="code"
+        placeholder="Sql query here"
+        :indent-with-tab="true"
+        :tab-size="2"
+        lang="sql"
+        :extensions="[
+          sql(sqlConfig),
+          dbCenterQueryTheme
+        ]"
+      />
+    </div>
+
+    <!-- query info screen -->
+    <div
+      class="bottom-0 right-0 h-[30%] max-h-[300px] overflow-auto max-w-[calc(100vw-200px)] border-t w-full border-[#1D1E24] "
+    >
+      <div
+        v-for="msg in [...messages].reverse()"
+        :class="cn(
+          'text-sm p-2 border-b border-[#1D1E24] text-[#4f5052] flex justify-between'
+        )"
+      >
+        {{ msg.message }}
+        <p
+          v-if="msg?.time"
+        >
+          {{ msg.time?.toFixed(2) }} ms
+        </p>
+      </div>
+    </div>
+    <!-- query info screen -->
+
+    <button
+      :class="cn(
+        'bg-[#465ED6] px-3 py-1.5 rounded absolute bottom-3 right-3 ',
+        {
+          'opacity-60 cursor-not-allowed': loading
+        }
+      )"
+      @click="handleRunQuery"
+      :disabled="loading"
+    >
+      Run query
+    </button>
+  </div>
 </template>

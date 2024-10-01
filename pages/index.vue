@@ -24,7 +24,7 @@ const dbStore = useDbStore()
         <h1 
           class="text-4xl font-medium mb-1"
         >
-        Database Center
+          Database Center
         </h1>
       </div>
       <p

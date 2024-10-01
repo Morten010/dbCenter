@@ -8,7 +8,7 @@ const {
     id
   }
 } = useRoute()
-const model = defineModel<{
+const choice = defineModel<null | {
     view: string,
     name: string
 }>()
@@ -43,10 +43,10 @@ const db = useDbStore().getSpecificContainer(id as string)
         :class="cn(
           'flex items-center gap-2 hover:bg-[#191a1e] text-[#5a5d67] px-3 py-1.5 rounded font-semibold cursor-pointer transition-colors duration-100',
           {
-            'bg-[#141A39] text-[#526FDF]': model?.view === link.view
+            'bg-[#141A39] text-[#526FDF]': choice?.view === link.view
           }
         )"
-        @click="model = {
+        @click="choice = {
           name: '',
           view: link.view
         }"

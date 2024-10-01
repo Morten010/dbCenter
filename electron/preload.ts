@@ -1,7 +1,6 @@
 import { contextBridge, ipcRenderer } from 'electron'
 import type { DockerApiProps } from "~/types/dockerApi"
 import type { MysqlApiProps } from '~/types/mysqlApi'
-import type { databaseStoreProps } from '~/types/store'
 
 // Docker Api
 
@@ -13,7 +12,8 @@ const DOCKER_API: DockerApiProps = {
     getAllContainers: () => ipcRenderer.invoke('docker/list'),
     checkConnection: () => ipcRenderer.invoke('docker/ping'),
     allVolumes: () => ipcRenderer.invoke('docker/volumes/all'),
-    getConfig: (volumeName: string) => ipcRenderer.invoke('docker/getConfig', volumeName)
+    getConfig: (volumeName: string) => ipcRenderer.invoke('docker/getConfig', volumeName),
+    sync: (volumeId: string) => ipcRenderer.invoke('docker/sync', volumeId)
 }
 
 contextBridge.exposeInMainWorld('docker', DOCKER_API)

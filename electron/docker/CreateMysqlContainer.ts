@@ -12,7 +12,7 @@ export const createMysqlContainer = async (payload: string) => {
     databasePassword,
     databaseUser,
   }: CreateMysqlPayload = JSON.parse(payload)
-  const volumeName = `DatabaseCenter-mysql-${randomBytes(8).toString('hex')}`
+  const volumeName = `database-center-mysql-${randomBytes(8).toString('hex')}`
   const configDir = '/fuck/you';
   const configFilePath = `${configDir}/config.json`;
 

@@ -15,9 +15,11 @@ const sync = async () => {
   // check what volumes already exists
   for(const volume of volumes){
     if(!dbNames.includes(volume)){
-      console.log(volume);
-      
+      // Add db to list
       // await useDb.addExistingDatabase(volume)
+    }else{
+      // check if status matches stored status
+      useDocker.sync(volume)
     }
   }
 

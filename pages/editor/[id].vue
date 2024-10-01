@@ -3,11 +3,57 @@ const choice = ref<null | {
   view: 'table' | 'query' | 'diagram'
   name: string
 }>(null)
+const success = ref<boolean>(false)
+
+try{
+  const mysql = await useMysql()
+
+ const res = await mysql.query('show tables;')
+
+  if(res.success){
+    success.value = true
+  }else {
+    success.value = false
+  }
+}catch{
+  success.value = false
+}
 </script>
 
 <template>
   <main
+    class="h-screen w-full grid place-content-center text-center"
+  >
+    <h1
+      class="text-2xl font-semibold"
+    >
+      Failed to connect
+    </h1>
+    <p
+      class="mb-2 text-[#fafafa]/60"
+    >
+      Failed to connect to mysql database
+    </p>
+    <div
+      class="flex gap-2"
+    >
+      <NuxtLink
+        class="flex items-center gap-2 px-3 py-1.5 bg-primary/30 rounded"
+        to="/"
+      >
+        <Icon name="ep:back" />
+        Go back
+      </NuxtLink>
+      <button
+        class="flex items-center gap-2 px-3 py-1.5 bg-primary rounded"
+      >
+        Try to connect
+      </button>
+    </div>
+  </main>
+  <main
     class="bg-[#101014] min-h-screen text-white max-w-[100vw] overflow-auto flex flex-col"
+    v-if="success"
   >
     <!-- top nav -->
      <NavigationTop 
@@ -26,7 +72,7 @@ const choice = ref<null | {
 
       <!-- content -->
         <div
-          class="flex-grow max-w-[calc(100vw-200px)] max-h-[calc(100vh-56px)] overflow-auto"
+          class="flex-grow max-w-[calc(100vw-200px)] max-h-[calc(100vh-57px)] overflow-auto"
         >
           <!-- empty -->
           <div

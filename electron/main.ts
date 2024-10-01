@@ -10,6 +10,7 @@ import { allVolumes } from "./docker/allVolumes";
 import { readConfigFromVolume } from "./docker/getConfig";
 import type { databaseStoreProps } from "~/types/store";
 import mysql from 'mysql2/promise';
+import { CheckStatus } from "./docker/checkStatus";
 
 const docker = new Docker();
 
@@ -72,6 +73,9 @@ function initIpc() {
   ipcMain.handle('docker/getConfig', (_event, volumeName) => {
     return readConfigFromVolume(volumeName)
   })
+  ipcMain.handle('docker/sync', (_event, volumeId) => {
+    return CheckStatus(volumeId)
+  })
 
   // Mysql api
   ipcMain.handle('mysql/query', async (_event, payload) => {
@@ -83,18 +87,18 @@ function initIpc() {
       query: string
     } = JSON.parse(payload)
 
-    const connection = await mysql.createConnection({
-      host: 'localhost',
-      user: db.user,
-      password: db.password,
-      database: 'tables',
-    });
-
     try {
+      const connection = await mysql.createConnection({
+        host: 'localhost',
+        user: db.user,
+        password: db.password,
+        database: 'tables',
+      });
+
       const [results, fields] = await connection.query(
         query
       );
-    
+      
       return {
         success: true,
         data: results,
@@ -102,9 +106,12 @@ function initIpc() {
         message: 'Success'
       }
   } catch (err) {
+    console.log(err);
+    
       return {
         success: false,
-        message: 'Failed to connect to mysql database'
+        message: 'Failed to connect to mysql database',
+        error: err
       }
   }
   })

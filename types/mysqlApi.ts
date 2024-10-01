@@ -4,5 +4,6 @@ export type MysqlApiProps = {
         data?: any,
         fields?: any,
         message: string
+        error?: string
       } >;
 }

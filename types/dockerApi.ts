@@ -35,6 +35,7 @@ export type DockerApiProps = {
     checkConnection: () => Promise<boolean>;
     allVolumes(): Promise<string[]>
     getConfig: (volumeName: string) => Promise<any>
+    sync: (volumeId: string) => Promise<any>
 }
 
 export type CreateMysqlPayload = {
