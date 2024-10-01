@@ -16,7 +16,9 @@ export const CheckStatus = async (volumeId: string) => {
         const containers = await docker.listContainers()
 
         for(const container of containers){
-            console.log(container.Mounts);
+            for(const mount of container.Mounts){
+                
+            }
         }
         
     } catch (err) {
