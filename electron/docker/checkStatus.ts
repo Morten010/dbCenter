@@ -7,24 +7,49 @@ export const CheckStatus = async (volumeId: string) => {
     let volume: Docker.Volume;
     try{
         volume = docker.getVolume(volumeId)
-        const insp = await volume.inspect()
-        console.log(volume);
-        console.log(insp);
-        
+        await volume.inspect()
     }catch(err){
         return 'VOLUME_DELETED'
     }
 
     // Check if volume has any containers connected
     try {
-        const containers = await docker.listContainers()
+        const AllContainers = await docker.listContainers({
+            all: true,
+        })
+        const containers = AllContainers.filter(c => {
+            let pass = false
+            for(const mount of c.Mounts){
+                console.log(mount.Name);
+                if(mount.Name?.includes('database-center')){
+                    pass = true
+                }
+            }
 
+            return pass
+        })
+        console.log(`containers: ${containers.length}`);
+        console.log(containers);
+        
         for(const container of containers){
+            console.log(container.State);
+            if(container.State !== 'running'){
+                const c = docker.getContainer(container.Id)
+
+                await c.remove()
+                return 'OFF'
+            }
+            
             for(const mount of container.Mounts){
-                
+                if(mount.Name === volumeId){
+                    console.log('ON');
+                    return 'ON'
+                }
             }
         }
+        console.log('OFF');
         
+        return 'OFF'
     } catch (err) {
         console.log('----- err\n');
         console.log(err);

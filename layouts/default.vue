@@ -39,11 +39,27 @@ const sync = async () => {
             description: 'Database missing from docker so it has been removed'
           })    
           break;
-        case 'VOLUME_CLOSED':
+        case 'OFF':
           console.log('Volume is off');
+          const dbOFF = useDb.getSpecificContainer(volume)
+
+          if(!dbOFF) return
+
+          useDb.updateDatabase({
+            ...dbOFF,
+            status: 'off'
+          })
           break
-        case 'VOLUME_OPENED':
+        case 'ON':
           console.log('Volume is on');
+          const dbON = useDb.getSpecificContainer(volume)
+
+          if(!dbON) return
+
+          useDb.updateDatabase({
+            ...dbON,
+            status: 'on'
+          })
           break
 
         default:
