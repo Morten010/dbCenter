@@ -6,6 +6,7 @@ export const getAllTables = async () => {
         host: 'localhost',
         user: 'root',
         database: 'test',
+        port: 3306
     });
 
     try {

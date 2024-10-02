@@ -8,7 +8,9 @@ const success = ref<boolean>(false)
 try{
   const mysql = await useMysql()
 
- const res = await mysql.query('show tables;')
+  const res = await mysql.query('SELECT 1;')
+  console.log(res);
+ 
 
   if(res.success){
     success.value = true
@@ -18,11 +20,14 @@ try{
 }catch{
   success.value = false
 }
+console.log(choice);
+
 </script>
 
 <template>
   <main
     class="h-screen w-full grid place-content-center text-center"
+    v-if="!success"
   >
     <h1
       class="text-2xl font-semibold"
@@ -87,7 +92,7 @@ try{
 
           <!-- table -->
           <Table 
-            v-if="choice"
+            v-if="choice?.view === 'table'"
             :name="choice?.name"
             :key="choice.name"
           />
@@ -99,8 +104,10 @@ try{
 
           <!-- query editor -->
           <!-- https://github.surmon.me/vue-codemirror -->
-          <QueryEditor 
+          <QueryEditor
             v-if="choice?.view === 'query'"
+            :query-name="choice.name"
+            :key="choice.name"
           />
           <!-- query editor -->
         </div>

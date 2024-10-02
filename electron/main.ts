@@ -93,12 +93,15 @@ function initIpc() {
         user: db.user,
         password: db.password,
         database: 'tables',
+        port: Number(db.port)
       });
 
       const [results, fields] = await connection.query(
         query
       );
       
+
+      await connection.end()
       return {
         success: true,
         data: results,

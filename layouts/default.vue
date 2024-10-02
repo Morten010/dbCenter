@@ -1,5 +1,7 @@
 <script setup lang='ts'>
 import type Dockerode from 'dockerode';
+import { toast } from 'vue-sonner';
+import { deleteMysqlDatabase } from '~/electron/docker/DeleteMysqlDatabase';
 import { useDbStore } from '~/store/dbStore';
 
 const useDb = useDbStore()
@@ -8,18 +10,46 @@ const status = ref<'loading' | 'error' | 'success'>('loading')
 
 
 const sync = async () => {
-  const volumes = await useDocker.allVolumes()
+  const dockerVolumes = await useDocker.allVolumes()
+  const savedVolumes = useDb.allDatabasesNames
+  const volumes: string[] = [
+    ...dockerVolumes, 
+    ...savedVolumes.filter(vol => !dockerVolumes.includes(vol))
+  ]
   console.error('syncing');
   console.log(volumes);
   
   // check what volumes already exists
+  console.log('volumes: '+volumes.length);
+  
   for(const volume of volumes){
     if(!dbNames.includes(volume)){
       // Add db to list
-      // await useDb.addExistingDatabase(volume)
+      await useDb.addExistingDatabase(volume)
     }else{
       // check if status matches stored status
-      useDocker.sync(volume)
+      const res = await useDocker.sync(volume)
+      console.log(res);
+      console.log(volume);
+
+      switch (res) {
+        case 'VOLUME_DELETED':
+          useDb.deleteMissingDb(volume)
+          toast.error('Deleted missing datbase', {
+            description: 'Database missing from docker so it has been removed'
+          })    
+          break;
+        case 'VOLUME_CLOSED':
+          console.log('Volume is off');
+          break
+        case 'VOLUME_OPENED':
+          console.log('Volume is on');
+          break
+
+        default:
+          break;
+      }
+      
     }
   }
 

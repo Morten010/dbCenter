@@ -39,6 +39,8 @@ const StartMysqlDatabase = async (db: databaseStoreProps) => {
             }
         }
     } catch (error) {
+        console.log(error);
+        
         return {
             success: false,
             message: 'Failed to start database',

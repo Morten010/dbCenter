@@ -8,4 +8,8 @@ export type databaseStoreProps = {
     volumeName: string;
     status: 'loading' | 'off' | 'on'
     containerId: string | null;
+    queries:  {
+        name: string,
+        query: string,
+    }[]
 }

@@ -1,7 +1,24 @@
 <script setup lang='ts'>
 import { Codemirror } from 'vue-codemirror';
 import { sql, type SQLConfig } from "@codemirror/lang-sql"
-const code = ref<string>('')
+import { useDbStore } from '~/store/dbStore';
+
+const {
+    queryName
+} = defineProps<{
+    queryName: string
+}>()
+const {
+    params: {
+        id
+    }
+} = useRoute()
+const useDb = useDbStore()
+const query = useDb.getQuery(queryName, id as string)
+console.log(`Query: ${query}`);
+console.log(`Query name: ${queryName}`);
+
+const code = ref<string>(query || '')
 const loading = ref<boolean>(false)
 const messages = ref<{
   message: string
@@ -11,7 +28,7 @@ const messages = ref<{
 
 const mysql = await useMysql()
 
-const res = await mysql.query('SHOW TABLES;')
+const res = await mysql.query('show tables;')
 const data: null | {
   Tables_in_tables: string
 }[] = res.data
@@ -89,17 +106,26 @@ const handleRunQuery = async () => {
     </div>
     <!-- query info screen -->
 
-    <button
-      :class="cn(
-        'bg-[#465ED6] px-3 py-1.5 rounded absolute bottom-3 right-3 ',
-        {
-          'opacity-60 cursor-not-allowed': loading
-        }
-      )"
-      @click="handleRunQuery"
-      :disabled="loading"
+    <div
+      class="absolute bottom-3 right-3 flex gap-2"
     >
-      Run query
-    </button>
+      <QueryAdd 
+        :disabled="loading || !code.length"
+        :query="code"
+      />
+      <button
+        :class="cn(
+          'bg-[#465ED6] px-3 py-1.5 rounded flex gap-2 items-center',
+          {
+            'opacity-60 cursor-not-allowed': loading
+          }
+        )"
+        @click="handleRunQuery"
+        :disabled="loading"
+      >
+        <Icon name="solar:play-linear"/>
+        Run query
+      </button>
+    </div>
   </div>
 </template>

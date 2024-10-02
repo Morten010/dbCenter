@@ -23,15 +23,31 @@ export const useDbStore = defineStore('dbStore', {
                 return state.databases.find(db => db.containerId === containerId)
             }
         },
+        allQueries: (state => {
+            return (volumeId: string) => {
+                const db = state.databases.find(db => db.volumeName == volumeId)
+                return db?.queries || []
+            } 
+        })
     },
     actions: {
         async addExistingDatabase(volumeName: string) {
-            console.log('volume: ', volumeName);
-            
-            const res = await useDocker.getConfig(volumeName)
-            console.log(res);
-            
-            toast.success('Found database not added')
+            this.databases = [...this.databases, {
+                database: 'mysql',
+                name: 'Unknown-database',
+                password: 'mypassword',
+                port: '3306',
+                status: 'off',
+                user: 'admin',
+                version: '9.0.0',
+                volumeName: volumeName,
+                containerId: null,
+                queries: []
+            }]
+
+            toast.success('Found unknown database', {
+                description: 'You can check the content and rename it properly or delete it.'
+            })
 
         },
         async addDatabase(db: CreateMysqlPayload) {
@@ -52,7 +68,8 @@ export const useDbStore = defineStore('dbStore', {
                 user: db.databaseUser,
                 version: '9.0.0',
                 volumeName: res.data.volumeName,
-                containerId: null
+                containerId: null,
+                queries: []
             }]
 
             return true
@@ -74,9 +91,9 @@ export const useDbStore = defineStore('dbStore', {
 
             if(!res.success) {
                 toast.error('failed to start database')
+                
                 this.updateDatabase({
                     ...db,
-
                 })
                 return
             }
@@ -139,12 +156,61 @@ export const useDbStore = defineStore('dbStore', {
 
             const res = await useDocker.deleteMysqlContainer(payload)
 
+            console.log(res);
+            
             if(!res.success) return toast.error('Failed to delete database😵')
 
             toast.success('Successfully deleted🥇')
 
             
             this.databases = this.databases.filter(db => db.volumeName !== volumeName)
+        },
+        async deleteMissingDb(volumeName: string) {
+            this.databases = [
+                ...this.databases.filter(db => db.volumeName !== volumeName)
+            ]
+        },
+
+        // queries
+        addQuery({
+            query,
+            name,
+            volumeId
+        }: {
+            query: string;
+            name: string;
+            volumeId: string
+        }) {
+
+            this.databases = [...this.databases].map(db => {
+                if(db.volumeName === volumeId){
+                    return {
+                        ...db,
+                        queries: [
+                            ...db?.queries,
+                            {
+                                name,
+                                query
+                            }
+                        ]
+                    }
+                }
+                return db
+            })
+        },
+        removeQuery() {
+            return 'add this'
+        },
+        getQuery(queryName: string, volumeName: string) {
+            const db = this.getSpecificContainer(volumeName)
+
+            if(!db) return ''
+
+            const query = db.queries.find(query => query.name === queryName)
+
+            if(query) return query?.query
+
+            return ''
         },
     }
 })

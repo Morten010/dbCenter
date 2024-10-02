@@ -4,9 +4,13 @@ const docker = new Docker()
 
 export const CheckStatus = async (volumeId: string) => {
     // Check if volume exists
-    let volume: Docker.Image;
+    let volume: Docker.Volume;
     try{
-        volume = docker.getImage(volumeId)
+        volume = docker.getVolume(volumeId)
+        const insp = await volume.inspect()
+        console.log(volume);
+        console.log(insp);
+        
     }catch(err){
         return 'VOLUME_DELETED'
     }
@@ -29,12 +33,11 @@ export const CheckStatus = async (volumeId: string) => {
     }
     
     
-    
-    
     // check if container is still alive
     // if still alive but not running close it
 
     // check if volumeId is connected to an open container
 
     // Check if container...
+    return 'nothing'
 }
