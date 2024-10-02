@@ -98,7 +98,7 @@ console.log(model.value);
                     class="mt-0.5"
                 />
                 <p
-                    class="max-w-[135px] overflow-hidden [#e7e7e8]space-nowrap text-ellipsis"
+                    class="max-w-[135px] overflow-hidden [#e7e7e8]space-nowrap text-nowrap text-ellipsis"
                 >
                     {{ query.name }}
                 </p>

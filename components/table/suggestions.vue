@@ -29,7 +29,7 @@ const handleClick = (tableName: string) => {
         Pick a table to view.
     </p>
     <div
-        class="pt-4 "
+        class="pt-4 flex gap-2 flex-wrap"
     >
         <div
             v-for="table in data"
