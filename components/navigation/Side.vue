@@ -14,10 +14,7 @@ const model = defineModel<null | {
     name: string
 }>()
 
-const {
-    success,
-    data
-} = await mysql.query('SHOW TABLES;')
+const tables = mysql.liveQuery('SHOW TABLES;')
 
 console.log(model.value);
 
@@ -39,8 +36,17 @@ console.log(model.value);
             class="flex flex-col"
         >
             <div
+                class="flex flex-col gap-1"
+                v-if="tables.message === 'loading'"
+            >
+                <div 
+                    v-for="(_, index) in Array(3)"
+                    class="bg-primary/10 h-2.5 w-[130px] rounded-[2px] animate-pulse"
+                />
+            </div>
+            <div
                 class="text-sm text-[#A0A4A5] w-full"
-                v-if="!data.length"
+                v-if="!tables.data.length"
             >
                 No tables found
             </div>
@@ -51,8 +57,8 @@ console.log(model.value);
                         'text-primary hover:text-primary/80 pl-1': model?.name && model.name === table.Tables_in_tables
                     }
                 )"
-                v-if="data"
-                v-for="table of data"
+                v-if="tables.data"
+                v-for="table of tables.data"
                 @click="model = {
                     view: 'table',
                     name: table.Tables_in_tables

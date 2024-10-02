@@ -1,6 +1,7 @@
 <script setup lang='ts'>
+import { sql, type SQLConfig } from "@codemirror/lang-sql";
 import { Codemirror } from 'vue-codemirror';
-import { sql, type SQLConfig } from "@codemirror/lang-sql"
+import { toast } from 'vue-sonner';
 import { useDbStore } from '~/store/dbStore';
 
 const {
@@ -43,6 +44,8 @@ const sqlConfig: SQLConfig = {
 }
 
 const handleRunQuery = async () => {
+  if(!code.value.length) return toast.error('Missing query to execute');
+  
   loading.value = true;
 
   messages.value = [...messages.value, 
@@ -63,6 +66,20 @@ const handleRunQuery = async () => {
   
   loading.value = false;
 }
+
+function handleKeydown(event: KeyboardEvent) {
+  if (event.shiftKey && event.key === 'Enter') {
+    handleRunQuery();
+  }
+}
+
+onMounted(() => {
+  window.addEventListener('keydown', handleKeydown);
+});
+
+onUnmounted(() => {
+  window.removeEventListener('keydown', handleKeydown);
+});
 
 </script>
 
