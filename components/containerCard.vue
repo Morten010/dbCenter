@@ -34,7 +34,7 @@ const handleCopyConnectionString = () => {
           <p
             class="text-sm text-[#8C8E98]"
           >
-            Mysql 9.x.x @ 3306
+            Mysql {{ database.version }} @ {{ database.port }}
           </p>
         </div>
 

@@ -13,8 +13,6 @@ export const createMysqlContainer = async (payload: string) => {
     databaseUser,
   }: CreateMysqlPayload = JSON.parse(payload)
   const volumeName = `database-center-mysql-${randomBytes(8).toString('hex')}`
-  const configDir = '/fuck/you';
-  const configFilePath = `${configDir}/config.json`;
 
   // check if correct data is recieved
   if (!databaseName) return {
@@ -105,12 +103,22 @@ export const createMysqlContainer = async (payload: string) => {
         volumeName,
       }
     }
-  } catch (error) {
-    console.log(error);
+  } catch (err: any) {
+    console.log(err);
+    let error: string = 'Failed to create db';
     
+    if(err.message.includes('Conflict. The container name')){
+      // Set custom error
+      error = `Container named ${databaseName} already exists.`
+
+      // remove volume again
+      const volume = docker.getVolume(volumeName)
+      await volume.remove()
+    }
+
     return {
       success: false,
-      message: 'Failed to create db'
+      message: error
     }
   }
 

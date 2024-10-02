@@ -2,6 +2,7 @@
 import { toast } from 'vue-sonner'
 import { useDbStore } from '~/store/dbStore';
 const open = ref(false)
+const loading = ref(false)
 const dbFormData = reactive({
     databaseName: "",
     databasePort: 3306,
@@ -13,17 +14,26 @@ const useDb = useDbStore()
 
 const handleSubmit = async (e: Event) => {
     e.preventDefault()
-    
+    const exists = [...useDb.allDatabases].find(db => db.name === dbFormData.databaseName)
+    const portInUse =  [...useDb.allDatabases].find(db => db.port === dbFormData.databasePort.toString() && db.status === 'on' || db.status === 'loading')
+
+    if(!loading) return
+    if(exists) return toast.error(`A database is already named ${dbFormData.databaseName}`)
+    if(portInUse) return toast.error(`The database port is already in use please close the database using the port to create the database.`)
     if(!dbFormData.databaseName.length) return toast.error('Missing database name')
     if(!dbFormData.databasePassword.length) return toast.error('Missing password')
     if(dbFormData.databasePort.toString().length !== 4) return toast.error('Port must be 4 numbers, 3306 is suggested.')
     if(!dbFormData.databaseUser.length) return toast.error('Missing user')
+    loading.value = true
+
+
 
     const res = await useDb.addDatabase(dbFormData)
+    console.log(res);
+    
 
+    loading.value = false
     if(res) return open.value = false
-    
-    
 }
 
 
@@ -123,16 +133,33 @@ const handleSubmit = async (e: Event) => {
                 >
                     <button
                         type="button"
-                        class="bg-[#6e190e] py-2 px-4 rounded font-semibold"
+                        :class="cn(
+                            'bg-[#6e190e] py-2 px-4 rounded font-semibold transition-all duration-100',
+                            {
+                                'opacity-60 cursor-not-allowed': loading
+                            }
+                        )"
                         @click="open = false"
+                        :disabled="loading"
                     >
                         Cancel
                     </button>
                     <button
                         type="submit"
-                        class="bg-[#465ED6] py-2 px-4 rounded font-semibold"
+                        :class="cn(
+                            'bg-[#465ED6] py-2 px-4 rounded font-semibold',
+                            {
+                                'opacity-60 cursor-not-allowed': loading
+                            }
+                        )"
+                        :disabled="loading"
                     >
-                        Create
+                        <Icon 
+                            name="fluent:spinner-ios-20-regular" 
+                            class="animate-spin" 
+                            v-if="loading"
+                        />
+                        {{ loading ? 'Setting up database' : 'Create'}}
                     </button>
                 </div>
             </form>

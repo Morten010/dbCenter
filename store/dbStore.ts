@@ -54,7 +54,9 @@ export const useDbStore = defineStore('dbStore', {
             
             const res = await useDocker.createMysqlContainer(JSON.stringify(db)) 
             
-            console.log(res);
+            console.log('-------- res \n');
+            console.log(res.success);
+            console.log('-------- res \n');
             
             if(!res.success) return toast.error(res.message)
 
