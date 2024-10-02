@@ -33,7 +33,7 @@ const handleClick = (tableName: string) => {
     >
         <div
             v-for="table in data"
-            class="rounded-lg overflow-hidden max-w-[200px] border-border border bg-modal-bg group hover:border-primary/60 cursor-pointer transition-all duration-100"
+            class="rounded-lg overflow-hidden max-w-[200px] min-w-[200px] border-border border bg-modal-bg group hover:border-primary/60 cursor-pointer transition-all duration-100"
             @click="() => handleClick(table.Tables_in_tables)"
         >
             <div
