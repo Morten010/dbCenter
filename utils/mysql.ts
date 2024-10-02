@@ -20,6 +20,9 @@ export const useMysql = async () => {
             })
 
             return await mysqlApi.query(payload)
+        },
+        liveQuery: () => {
+
         }
     }
 }

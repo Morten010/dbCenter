@@ -206,9 +206,9 @@ export const useDbStore = defineStore('dbStore', {
         getQuery(queryName: string, volumeName: string) {
             const db = this.getSpecificContainer(volumeName)
 
-            if(!db) return ''
+            if(!db || !db.queries) return ''
 
-            const query = db.queries.find(query => query.name === queryName)
+            const query = db.queries?.find(query => query.name === queryName)
 
             if(query) return query?.query
 
