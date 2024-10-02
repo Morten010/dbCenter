@@ -29,8 +29,6 @@ const sync = async () => {
     }else{
       // check if status matches stored status
       const res = await useDocker.sync(volume)
-      console.log(res);
-      console.log(volume);
 
       switch (res) {
         case 'VOLUME_DELETED':
@@ -82,6 +80,7 @@ const checkConnection = async () => {
 setInterval(() => {
     checkConnection()
 }, 1000) as unknown as number
+
 onMounted(() => {
   sync()
 })

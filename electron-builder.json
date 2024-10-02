@@ -1,6 +1,6 @@
 {
   "$schema": "https://raw.githubusercontent.com/electron-userland/electron-builder/master/packages/app-builder-lib/scheme.json",
-  "appId": "your.app.id",
+  "appId": "com.databasecenter.dbcenter",
   "asar": false,
   "directories": {
     "output": "release/${version}"
@@ -16,6 +16,7 @@
     ]
   },
   "win": {
+    "publish": ["github"],
     "target": [
       {
         "target": "nsis",
