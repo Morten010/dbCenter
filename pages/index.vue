@@ -13,22 +13,16 @@ const dbStore = useDbStore()
     class="w-full flex flex-col px-5 bg-bg min-h-screen text-[#e7e7e8] max-w-[100vw] overflow-hidden"
 >
     <div
-      class="text-center mt-5 mb-7"
+      class="flex flex-col my-4 text-center"
     >
-      <div
-        class="flex items-center justify-center gap-1"
-      >
-        <img 
-          src="/icon.svg"
-        />
-        <h1 
-          class="text-4xl font-medium mb-1"
-        >
-          Database Center
-        </h1>
-      </div>
+      <NuxtImg 
+        src="/large-logo.png"
+        width="297"
+        height="41"
+        class="mx-auto"
+      />
       <p
-        class="text-[#8C8E98]"
+        class="text-[#8C8E98] text-sm tracking-wide"
       >
         Manage your MySQL databases with ease
       </p>
@@ -45,7 +39,7 @@ const dbStore = useDbStore()
     </div>
     <div
       v-if="!dbStore.allDatabases.length"
-      class="my-10"
+      class="my-20"
     >
       <img 
         src="/missing.png"

@@ -18,13 +18,21 @@ const handleCopyConnectionString = () => {
 </script>
 
 <template>
-  <div class="flex flex-col py-[10px] px-[20px] border border-border rounded-[8px] gap-[14px] relative">
+  <div class="flex flex-col p-[15px] border border-border rounded-[8px] gap-[14px] relative bg-modal-bg shadow-md">
 
     <!-- top -->
      <div
       class="flex gap-5 items-center"
      >
-        <Icon name="devicon:mysql" size="38" />
+        <div
+          class="bg-[#122322] p-2 aspect-square w-12 grid place-content-center h-12 rounded"
+        >
+          <Icon 
+            name="fontisto:mysql" 
+            class="text-primary"
+            size="38" 
+          />
+        </div>
         <div>
           <h2
             class="font-semibold"
