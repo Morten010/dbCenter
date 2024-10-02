@@ -10,7 +10,7 @@ const dbStore = useDbStore()
 <!-- homepage -->
 <template>
   <div 
-    class="w-full flex flex-col px-5 bg-[#101014] min-h-screen text-white max-w-[100vw] overflow-hidden"
+    class="w-full flex flex-col px-5 bg-bg min-h-screen text-[#e7e7e8] max-w-[100vw] overflow-hidden"
 >
     <div
       class="text-center mt-5 mb-7"

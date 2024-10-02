@@ -17,7 +17,7 @@
     >
         <Transition>
             <p
-                class="absolute -top-2 left-2/4 -translate-x-2/4 -translate-y-full whitespace-nowrap bg-[#1b1c21] border-white/20 border text-white text-sm px-2 py-1 rounded font-medium"
+                class="absolute -top-2 left-2/4 -translate-x-2/4 -translate-y-full [#e7e7e8]space-nowrap bg-[#1b1c21] border-[#e7e7e8]/20 border text-[#e7e7e8] text-sm px-2 py-1 rounded font-medium"
                 v-if="open"
             >
                 {{ title }}

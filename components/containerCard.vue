@@ -18,7 +18,7 @@ const handleCopyConnectionString = () => {
 </script>
 
 <template>
-  <div class="flex flex-col py-[10px] px-[20px] border border-[#1D1E24] rounded-[8px] gap-[14px] relative">
+  <div class="flex flex-col py-[10px] px-[20px] border border-border rounded-[8px] gap-[14px] relative">
 
     <!-- top -->
      <div
@@ -96,7 +96,7 @@ const handleCopyConnectionString = () => {
         title="Delete database"
       >
         <button 
-          class="text-[#8C8E98] hover:text-white"
+          class="text-[#8C8E98] hover:text-[#e7e7e8]"
           @click="deleteDatabase(database.volumeName)"
         >
           <Icon 
@@ -112,7 +112,7 @@ const handleCopyConnectionString = () => {
         title="Copy connection string"
       >
         <button 
-          class="text-[#8C8E98] hover:text-white"
+          class="text-[#8C8E98] hover:text-[#e7e7e8]"
           @click="handleCopyConnectionString"
         >
           <Icon 
@@ -128,7 +128,7 @@ const handleCopyConnectionString = () => {
         :title="database.status === 'loading' ? 'Loading...' : database.status === 'on' ? 'Shutdown database' : 'Start database'"
       >
         <button 
-          class="text-[#8C8E98] hover:text-white"
+          class="text-[#8C8E98] hover:text-[#e7e7e8]"
           @click="() => database.status === 'off' ? startDatabase(database.volumeName) : stopDatabase(database.containerId!)"
           :disabled="database.status === 'loading'"
         >

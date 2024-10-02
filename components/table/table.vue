@@ -20,18 +20,17 @@ const {
     `Show columns from ${name}`
 )
 
-console.log(clmns);
 
 </script>
 
 <template>
   <table class="w-full">
-    <thead class="w-full">
+    <thead class="w-full bg-modal-bg">
         <tr>
             <th
                 v-for="col in clmns"
                 :key="col"
-                class="py-1 px-3 border text-sm border-[#1D1E24] whitespace-nowrap text-nowrap"
+                class="py-1.5 px-4 border text-sm border-border [#e7e7e8]space-nowrap text-nowrap bg-modal-bg font-normal"
             >
                 {{ col.Field }}
             </th>
@@ -42,11 +41,12 @@ console.log(clmns);
         <tr
             v-for="(row, index) in data"
             :key="index"
+            class="outline-transparent hover:outline-primary hover:bg-[#162421] outline outline-1 transition-all duration-150 cursor-pointer"
         >
             <td
                 v-for="col in clmns"
                 :key="col"
-                class="text-sm py-1 px-3 border border-[#1D1E24] whitespace-nowrap text-nowrap max-w-[150px] overflow-hidden"
+                class="text-sm py-1.5 px-4 border border-border [#e7e7e8]space-nowrap text-nowrap max-w-[150px] overflow-hidden text-ellipsis"
             >
                 {{ row[col.Field] }}
             </td>

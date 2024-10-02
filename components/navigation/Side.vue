@@ -25,10 +25,10 @@ console.log(model.value);
 
 <template>
   <div
-    class="border-r border-[#1D1E24] min-w-[200px]"
+    class="border-r border-border min-w-[200px]"
   >
     <div
-        class="p-4 border-[#1D1E24] border-b"
+        class="p-4 border-border border-b"
     >
         <h2
             class="font-semibold mb-2"
@@ -39,16 +39,16 @@ console.log(model.value);
             class="flex flex-col"
         >
             <div
-                class="text-sm text-[#4F5052] w-full"
+                class="text-sm text-[#A0A4A5] w-full"
                 v-if="!data.length"
             >
                 No tables found
             </div>
             <div
                 :class="cn(
-                    'flex gap-2 items-center text-sm text-[#4F5052] hover:text-white transition-all duration-150 cursor-pointer hover:pl-1',
+                    'flex gap-2 items-center text-sm text-[#A0A4A5] hover:text-[#e7e7e8] transition-all duration-150 cursor-pointer hover:pl-1',
                     {
-                        'text-[#3952cf] pl-1': model?.name && model.name === table.Tables_in_tables
+                        'text-primary hover:text-primary/80 pl-1': model?.name && model.name === table.Tables_in_tables
                     }
                 )"
                 v-if="data"
@@ -81,9 +81,9 @@ console.log(model.value);
        <div>
             <div
                 :class="cn(
-                    'text-sm flex gap-2 items-center text-[#4F5052] cursor-pointer hover:text-white transition-all duration-150 hover:pl-1',
+                    'text-sm flex gap-2 items-center text-[#A0A4A5] cursor-pointer hover:text-[#e7e7e8] transition-all duration-150 hover:pl-1',
                     {
-                        'text-[#3952cf] pl-1': query.name === model?.name
+                        'text-primary hover:text-primary/80 pl-1': query.name === model?.name
                     }
                 )"
                 v-for="query in queries"
@@ -98,7 +98,7 @@ console.log(model.value);
                     class="mt-0.5"
                 />
                 <p
-                    class="max-w-[135px] overflow-hidden whitespace-nowrap text-ellipsis"
+                    class="max-w-[135px] overflow-hidden [#e7e7e8]space-nowrap text-ellipsis"
                 >
                     {{ query.name }}
                 </p>

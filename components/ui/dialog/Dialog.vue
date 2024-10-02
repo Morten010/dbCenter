@@ -12,7 +12,7 @@ const open = defineModel<boolean>()
     >
         <!-- dialog -->
         <div
-            class="border border-[#1D1E24] rounded-[8px] bg-[#101014] min-w-[350px]"
+            class="border border-border rounded-[8px] bg-modal-bg min-w-[350px]"
             @click="(e) => e.stopPropagation()"
         >
             <slot />

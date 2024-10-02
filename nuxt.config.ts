@@ -4,11 +4,12 @@ import { electronConfig } from "./configs/Electron";
 export default defineNuxtConfig({
   compatibilityDate: '2024-04-03',
   modules: [
-    'nuxt-electron', 
-    '@nuxt/icon', 
-    '@nuxtjs/tailwindcss', 
+    'nuxt-electron',
+    '@nuxt/icon',
+    '@nuxtjs/tailwindcss',
     '@pinia/nuxt',
     '@vueuse/nuxt',
+    '@nuxt/image',
   ], 
   devtools: { enabled: false },
   electron: electronConfig,
@@ -26,4 +27,3 @@ export default defineNuxtConfig({
     },
   },
 })
-

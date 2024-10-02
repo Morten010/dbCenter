@@ -1,7 +1,6 @@
 <script setup lang='ts'>
 import { editorTopNavConst } from '~/constants';
 import { useDbStore } from '~/store/dbStore';
-import type { databaseStoreProps } from '~/types/store';
 
 const {
   params: {
@@ -19,7 +18,7 @@ const db = useDbStore().getSpecificContainer(id as string)
 
 <template>
   <div
-    class="w-full border-b border-[#1D1E24] flex justify-between items-center"
+    class="w-full border-b border-border flex justify-between items-center"
   >
     <div
         class="flex items-center p-4 gap-2 font-semibold"
@@ -41,9 +40,9 @@ const db = useDbStore().getSpecificContainer(id as string)
     >
       <div
         :class="cn(
-          'flex items-center gap-2 hover:bg-[#191a1e] text-[#5a5d67] px-3 py-1.5 rounded font-semibold cursor-pointer transition-colors duration-100',
+          'flex items-center gap-2 hover:bg-[#183126] text-[#a0a4a5] px-3 py-1.5 rounded font-semibold cursor-pointer transition-all duration-100',
           {
-            'bg-[#141A39] text-[#526FDF]': choice?.view === link.view
+            'bg-[#183126] text-primary': choice?.view === link.view
           }
         )"
         @click="choice = {

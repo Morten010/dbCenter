@@ -84,7 +84,7 @@ const handleSubmitForm = (e: Event) => {
                     />
                 </label>
                 <div
-                    class="flex justify-end gap-2 mt-2 border-t border-[#1D1E24] pt-4 px-4"
+                    class="flex justify-end gap-2 mt-2 border-t border-border pt-4 px-4"
                 >
                     <button
                         type="button"

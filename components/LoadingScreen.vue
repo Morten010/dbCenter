@@ -3,7 +3,7 @@
 
 <template>
   <div
-    class="min-h-screen grid place-content-center bg-[#101014] text-[#465ED6]"
+    class="min-h-screen grid place-content-center bg-bg text-primary"
   >
     <Icon 
         name="fluent:spinner-ios-20-regular"

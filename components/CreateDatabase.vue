@@ -41,7 +41,7 @@ const handleSubmit = async (e: Event) => {
 
 <template>
     <button
-        class="fixed bottom-5 right-5 grid place-content-center bg-[#465ED6] hover:bg-[#3952cf] rounded-full p-1 text-[#101014] transition-colors duration-100"
+        class="fixed bottom-5 right-5 grid place-content-center bg-primary hover:bg-primary/80 rounded-full p-1 text-bg transition-colors duration-100"
         @click="open = true"
     >
         <Icon 
@@ -129,7 +129,7 @@ const handleSubmit = async (e: Event) => {
                     </label>
                 </div>
                 <div
-                    class="flex justify-end gap-2 mt-2 border-t border-[#1D1E24] pt-4 px-4"
+                    class="flex justify-end gap-2 mt-2 border-t border-border pt-4 px-4"
                 >
                     <button
                         type="button"
@@ -147,7 +147,7 @@ const handleSubmit = async (e: Event) => {
                     <button
                         type="submit"
                         :class="cn(
-                            'bg-[#465ED6] py-2 px-4 rounded font-semibold',
+                            'bg-primary py-2 px-4 text-modal-bg rounded font-bold',
                             {
                                 'opacity-60 cursor-not-allowed': loading
                             }

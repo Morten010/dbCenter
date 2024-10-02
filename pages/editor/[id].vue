@@ -1,8 +1,13 @@
 <script setup lang='ts'>
-const choice = ref<null | {
+import { table } from 'console';
+
+const choice = ref<{
   view: 'table' | 'query' | 'diagram'
   name: string
-}>(null)
+}>({
+  view: 'table',
+  name: ''
+})
 const success = ref<boolean>(false)
 
 try{
@@ -57,7 +62,7 @@ console.log(choice);
     </div>
   </main>
   <main
-    class="bg-[#101014] min-h-screen text-white max-w-[100vw] overflow-auto flex flex-col"
+    class="bg-bg min-h-screen text-[#e7e7e8] max-w-[100vw] overflow-auto flex flex-col"
     v-if="success"
   >
     <!-- top nav -->
@@ -92,9 +97,16 @@ console.log(choice);
 
           <!-- table -->
           <Table 
-            v-if="choice?.view === 'table'"
+            v-if="choice?.view === 'table' && choice.name.length"
             :name="choice?.name"
             :key="choice.name"
+          />
+          <TableSuggestions 
+            v-if="choice?.view === 'table' && !choice.name.length"
+            @pick="((tableName: string) => choice = {
+              name: tableName,
+              view: 'table'
+            })"
           />
           <!-- table -->
 

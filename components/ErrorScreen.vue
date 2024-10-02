@@ -3,7 +3,7 @@
 
 <template>
   <div
-    class="min-h-screen text-center grid place-content-center bg-[#101014] text-white"
+    class="min-h-screen text-center grid place-content-center bg-bg text-[#e7e7e8]"
   >
     <Icon 
         name="logos:docker-icon" 

@@ -88,12 +88,12 @@ const handleRunQuery = async () => {
 
     <!-- query info screen -->
     <div
-      class="bottom-0 right-0 h-[30%] max-h-[300px] overflow-auto max-w-[calc(100vw-200px)] border-t w-full border-[#1D1E24] "
+      class="bottom-0 right-0 h-[30%] max-h-[300px] overflow-auto max-w-[calc(100vw-200px)] border-t w-full border-border "
     >
       <div
         v-for="(msg, index) in [...messages].reverse()"
         :class="cn(
-          'text-sm p-2 border-b border-[#1D1E24] text-[#4f5052] flex justify-between'
+          'text-sm p-2 border-b border-border text-[#a0a4a5] flex justify-between'
         )"
       >
         <p>
