@@ -42,7 +42,7 @@ const handleSubmitForm = (e: Event) => {
 <template>
   <button
         :class="cn(
-          'bg-[#191a1e] text-[#5a5d67] px-3 py-1.5 rounded flex gap-2 items-center hover:text-[#526FDF] hover:bg-[#141A39] transition-colors duration-100',
+          'bg-[#191a1e] text-[#5a5d67] px-3 py-1.5 rounded flex gap-2 items-center hover:text-primary/40 hover:bg-[#183126] transition-colors duration-100',
           {
             'opacity-60 cursor-not-allowed': disabled
           }

@@ -117,7 +117,7 @@ const handleRunQuery = async () => {
       />
       <button
         :class="cn(
-          'bg-[#465ED6] px-3 py-1.5 rounded flex gap-2 items-center',
+          'bg-primary text-bg font-semibold px-3 py-1.5 rounded flex gap-2 items-center',
           {
             'opacity-60 cursor-not-allowed': loading
           }
