@@ -46,13 +46,13 @@ function createWindow() {
 }
 
 function initIpc() {
-  
+
   // docker api
   ipcMain.handle('docker/list', async () => {
     const containers = await docker.listContainers({
       all: true
     });
-    
+
     return containers;
   })
   ipcMain.handle('docker/ping', async () => {
@@ -102,7 +102,7 @@ function initIpc() {
       const [results, fields] = await connection.query(
         query
       );
-      
+
 
       await connection.end()
       return {
@@ -111,37 +111,41 @@ function initIpc() {
         fields: fields,
         message: 'Success'
       }
-  } catch (err) {
-    
+    } catch (err) {
+
       return {
         success: false,
         message: 'Failed to connect to mysql database',
         error: err
       }
-  }
+    }
   })
 
 
   // update api
   ipcMain.handle('update/check', async () => {
-    const res = await autoUpdater.checkForUpdates()
-    const currentVersion = app.getVersion()
-    console.log(res);
+    try {
+      const res = await autoUpdater.checkForUpdates()
+      const currentVersion = app.getVersion()
 
-    if(res?.updateInfo.version !== currentVersion){
-      return {
-        success: true,
-        message: `Version ${res?.updateInfo.version} is now available`,
-        data: res,
-        currentVersion: currentVersion
+      if (res?.updateInfo.version !== currentVersion) {
+        return {
+          success: true,
+          message: `Version ${res?.updateInfo.version} is now available`,
+          data: res,
+          currentVersion: currentVersion
+        }
       }
-    }
-    
-    return {
-      success: false,
-      message: 'No update available',
-      data: res,
-      currentVersion: currentVersion
+
+      return {
+        success: false,
+        message: 'No update available',
+      }
+    } catch (error) {
+      return {
+        success: false,
+        message: 'No update available',
+      }
     }
   })
   ipcMain.handle('update/run', () => {

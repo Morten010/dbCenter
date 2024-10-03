@@ -1,12 +1,28 @@
 <script setup lang="ts">
 import { useDbStore } from '~/store/dbStore';
+const update = ref<{
+  message: string,
+  success: boolean
+}>({
+  message: 'loading',
+  success: false
+})
 
 const dbStore = useDbStore()
-const {
-  message,
-  success,
-} = await useUpdate.check()
 
+const handleCheckForUpdate = async () => {
+  const {
+    message,
+    success,
+  } = await useUpdate.check()
+
+  update.value = {
+    message,
+    success
+  }
+}
+
+handleCheckForUpdate()
 </script>
 
 
@@ -14,9 +30,9 @@ const {
 <template>
   <div
     class="bg-primary text-bg font-semibold text-center py-1"
-    v-if="success"
+    v-if="update.success"
   >
-    {{ message }} <span 
+    {{ update.message }} <span 
     class="font-bold cursor-pointer"
     @click="() => useUpdate.run()"
     >Download Now</span> 
