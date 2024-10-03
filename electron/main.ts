@@ -148,9 +148,21 @@ function initIpc() {
       }
     }
   })
-  ipcMain.handle('update/run', () => {
-    autoUpdater.quitAndInstall(false, true);
-    return 'updating'
+  ipcMain.handle('update/run', async () => {
+    try {
+      const res = await autoUpdater.downloadUpdate()
+      autoUpdater.quitAndInstall(false, true);
+      return {
+        success: true,
+        message: 'Updating'
+      }
+    } catch (error) {
+      return {
+        success: false,
+        message: 'Failed to download update'
+      }
+    }
+    return 
   })
 }
 

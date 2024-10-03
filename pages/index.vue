@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { toast } from 'vue-sonner';
 import { useDbStore } from '~/store/dbStore';
 const update = ref<{
   message: string,
@@ -23,6 +24,31 @@ const handleCheckForUpdate = async () => {
 }
 
 handleCheckForUpdate()
+
+const updatePromise = () => {
+  return new Promise(async (resolve, reject) => {
+    const res = await useUpdate.run()
+    
+    if(res.success) {
+      reject(res.message)
+    }
+
+    resolve(res.message)
+  })
+}
+
+const handleUpdate = () => {
+  toast.promise(updatePromise(), {
+    loading: 'Downloading update',
+    success: () => {
+      return 'Updating and restarting the app now'
+    },
+    error: () => {
+      return 'Failed to download update'
+    }
+  })
+}
+
 </script>
 
 
@@ -34,7 +60,7 @@ handleCheckForUpdate()
   >
     {{ update.message }} <span 
     class="font-bold cursor-pointer"
-    @click="() => useUpdate.run()"
+    @click="() => handleUpdate()"
     >Download Now</span> 
   </div>
   <div 
@@ -43,7 +69,7 @@ handleCheckForUpdate()
     <div
       class="flex flex-col my-4 text-center"
     >
-      <NuxtImg 
+      <img
         src="/large-logo.png"
         width="297"
         height="41"

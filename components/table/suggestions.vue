@@ -39,10 +39,9 @@ const handleClick = (tableName: string) => {
             <div
                 class="aspect-video border-b border-border flex items-center justify-center relative"
             >
-                <NuxtImg 
-                    fill
+                <img
                     src="/table.jpg"
-                    class="top-0 left-0 w-full"
+                    class="absolute h-full top-0 left-0 w-full"
                 />
             </div>
             <p

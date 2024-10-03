@@ -5,5 +5,8 @@ export type updateApiProps = {
         data?: any,
         currentVersion: string
     }>
-    run: () => void
+    run: () => Promise<{
+        success: boolean,
+        message: string
+    }>
 }
