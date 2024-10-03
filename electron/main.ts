@@ -11,10 +11,9 @@ import { readConfigFromVolume } from "./docker/getConfig";
 import type { databaseStoreProps } from "~/types/store";
 import mysql from 'mysql2/promise';
 import { CheckStatus } from "./docker/checkStatus";
-import { AppUpdater, autoUpdater } from "electron-updater"
+import { AppUpdater as _, autoUpdater } from "electron-updater"
 
 autoUpdater.autoDownload = false;
-autoUpdater.autoInstallOnAppQuit = true;
 
 const docker = new Docker();
 
@@ -146,6 +145,7 @@ function initIpc() {
     }
   })
   ipcMain.handle('update/run', () => {
+    autoUpdater.quitAndInstall(false, true);
     return 'updating'
   })
 }

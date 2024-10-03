@@ -5,11 +5,7 @@ const dbStore = useDbStore()
 const {
   message,
   success,
-  data,
-  currentVersion
 } = await useUpdate.check()
-console.log('data: ' + data);
-console.log('currentVersion: ' + currentVersion);
 
 </script>
 
@@ -22,6 +18,7 @@ console.log('currentVersion: ' + currentVersion);
   >
     {{ message }} <span 
     class="font-bold cursor-pointer"
+    @click="() => useUpdate.run()"
     >Download Now</span> 
   </div>
   <div 
