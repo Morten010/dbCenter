@@ -116,7 +116,7 @@ export const useDbStore = defineStore('dbStore', {
             })
 
 
-            const res = await useDocker.stopContainer(containerId)
+            const res = await useDocker.stopContainer(db.volumeName)
             
             if(!res.success) {
                 toast.error(res.message)
@@ -145,7 +145,9 @@ export const useDbStore = defineStore('dbStore', {
             })]
         },
         async deleteDatabase(volumeName: string) {
-            // ! remove database volume
+            console.log('Volume name: ' + volumeName);
+            console.log('Volume name');
+            
             const db = this.getSpecificContainer(volumeName)
 
             if(!db) return toast('Failed to find database🔍')

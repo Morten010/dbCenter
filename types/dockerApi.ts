@@ -2,7 +2,7 @@ import type Dockerode from "dockerode";
 import type { databaseStoreProps } from "./store";
 
 export type DockerApiProps = {
-    stopContainer: (id: string) => Promise<{
+    stopContainer: (volumeName: string) => Promise<{
         success: boolean,
         message: string
     }>;

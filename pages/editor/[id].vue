@@ -1,6 +1,6 @@
 <script setup lang='ts'>
 import { table } from 'console';
-
+const router = useRouter()
 const choice = ref<{
   view: 'table' | 'query' | 'diagram'
   name: string
@@ -54,6 +54,7 @@ try{
       </NuxtLink>
       <button
         class="flex items-center gap-2 px-3 py-1.5 bg-primary rounded"
+        @click="() => router.go(0)"
       >
         Try to connect
       </button>

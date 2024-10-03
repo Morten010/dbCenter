@@ -1,12 +1,22 @@
-import type { databaseStoreProps } from "~/types/store";
 import Docker from "dockerode";
+import getContainerFromVolumeName from "../functions/getContainerFromVolumeName";
 
 const docker = new Docker();
 
-const stopMysqlDatabase = async (containerId: string) => {
+const stopMysqlDatabase = async (volumeName: string) => {
+    const {
+        success,
+        data
+    } = await getContainerFromVolumeName(volumeName)
+    
+    if(!success) return {
+        success: false,
+        message: 'Failed to shutdown database⛓️‍💥'
+    }
+
     try{
 
-        const container = docker.getContainer(containerId)
+        const container = docker.getContainer(data!)
 
         await container.stop()
         await container.remove()
