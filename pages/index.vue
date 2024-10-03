@@ -64,7 +64,12 @@ const handleUpdate = () => {
     >Download Now</span> 
   </div>
   <div 
-    class="w-full flex flex-col px-5 bg-bg min-h-screen text-[#e7e7e8] max-w-[100vw] overflow-hidden"
+    :class="cn(
+      'w-full flex flex-col px-5 bg-bg min-h-screen text-[#e7e7e8] max-w-[100vw] overflow-hidden',
+      {
+        'min-h-[calc(100vh-32px)]': update.success
+      }
+    )"
   >
     <div
       class="flex flex-col my-4 text-center"
