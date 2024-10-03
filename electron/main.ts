@@ -1,5 +1,5 @@
 import Docker from "dockerode";
-import { app, BrowserWindow, ipcMain } from "electron";
+import { app, BrowserWindow, ipcMain, ipcRenderer } from "electron";
 import path from "path";
 import { createMysqlContainer } from "./docker/CreateMysqlContainer";
 import { deleteMysqlDatabase } from "./docker/DeleteMysqlDatabase";
@@ -11,6 +11,10 @@ import { readConfigFromVolume } from "./docker/getConfig";
 import type { databaseStoreProps } from "~/types/store";
 import mysql from 'mysql2/promise';
 import { CheckStatus } from "./docker/checkStatus";
+import { AppUpdater, autoUpdater } from "electron-updater"
+
+autoUpdater.autoDownload = false;
+autoUpdater.autoInstallOnAppQuit = true;
 
 const docker = new Docker();
 
@@ -109,7 +113,6 @@ function initIpc() {
         message: 'Success'
       }
   } catch (err) {
-    console.log(err);
     
       return {
         success: false,
@@ -117,6 +120,33 @@ function initIpc() {
         error: err
       }
   }
+  })
+
+
+  // update api
+  ipcMain.handle('update/check', async () => {
+    const res = await autoUpdater.checkForUpdates()
+    const currentVersion = app.getVersion()
+    console.log(res);
+
+    if(res?.updateInfo.version !== currentVersion){
+      return {
+        success: true,
+        message: `Version ${res?.updateInfo.version} is now available`,
+        data: res,
+        currentVersion: currentVersion
+      }
+    }
+    
+    return {
+      success: false,
+      message: 'No update available',
+      data: res,
+      currentVersion: currentVersion
+    }
+  })
+  ipcMain.handle('update/run', () => {
+    return 'updating'
   })
 }
 

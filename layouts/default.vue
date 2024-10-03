@@ -16,12 +16,8 @@ const sync = async () => {
     ...dockerVolumes, 
     ...savedVolumes.filter(vol => !dockerVolumes.includes(vol))
   ]
-  console.error('syncing');
-  console.log(volumes);
   
   // check what volumes already exists
-  console.log('volumes: '+volumes.length);
-  
   for(const volume of volumes){
     if(!dbNames.includes(volume)){
       // Add db to list
@@ -38,7 +34,6 @@ const sync = async () => {
           })    
           break;
         case 'OFF':
-          console.log('Volume is off');
           const dbOFF = useDb.getSpecificContainer(volume)
 
           if(!dbOFF) return
@@ -49,7 +44,6 @@ const sync = async () => {
           })
           break
         case 'ON':
-          console.log('Volume is on');
           const dbON = useDb.getSpecificContainer(volume)
 
           if(!dbON) return

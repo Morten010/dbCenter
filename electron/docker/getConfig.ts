@@ -15,14 +15,11 @@ export const readConfigFromVolume = async (volumeName: string) => {
       const configData = fs.readFileSync(configFilePath, 'utf8');
       const config = JSON.parse(configData);
   
-      console.log('Configuration read successfully:', config);
-  
       return {
         success: true,
         config,
       };
     } catch (error) {
-        console.log(error);
         
       return {
         success: false,

@@ -5,6 +5,11 @@
   "author": {
     "name": "Morten Rasmussen"
   },
+  "repository": "https://github.com/Morten010/dbCenter",
+  "publish": {
+    "provider": "github",
+    "releaseType": "release"
+  },
   "private": true,
   "version": "0.1.2",
   "type": "commonjs",
@@ -24,6 +29,7 @@
     "@vueuse/nuxt": "^11.1.0",
     "clsx": "^2.1.1",
     "dockerode": "^4.0.2",
+    "electron-updater": "^6.3.4",
     "mysql2": "^3.11.3",
     "nuxt": "^3.13.0",
     "tailwind-merge": "^2.5.2",

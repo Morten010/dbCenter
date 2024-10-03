@@ -104,7 +104,6 @@ export const createMysqlContainer = async (payload: string) => {
       }
     }
   } catch (err: any) {
-    console.log(err);
     let error: string = 'Failed to create db';
     
     if(err.message.includes('Conflict. The container name')){

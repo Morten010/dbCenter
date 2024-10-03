@@ -29,8 +29,6 @@ const handleSubmit = async (e: Event) => {
 
 
     const res = await useDb.addDatabase(dbFormData)
-    console.log(res);
-    
 
     loading.value = false
     if(res) return open.value = false

@@ -1,17 +1,32 @@
 <script setup lang="ts">
 import { useDbStore } from '~/store/dbStore';
 
-
 const dbStore = useDbStore()
+const {
+  message,
+  success,
+  data,
+  currentVersion
+} = await useUpdate.check()
+console.log('data: ' + data);
+console.log('currentVersion: ' + currentVersion);
 
 </script>
 
 
 <!-- homepage -->
 <template>
+  <div
+    class="bg-primary text-bg font-semibold text-center py-1"
+    v-if="success"
+  >
+    {{ message }} <span 
+    class="font-bold cursor-pointer"
+    >Download Now</span> 
+  </div>
   <div 
     class="w-full flex flex-col px-5 bg-bg min-h-screen text-[#e7e7e8] max-w-[100vw] overflow-hidden"
->
+  >
     <div
       class="flex flex-col my-4 text-center"
     >

@@ -50,7 +50,6 @@ export const useMysql = async () => {
             setInterval(async () => {
                await fetchData()
             }, intervalTime)
-            console.log(result);
             
             // fetch data on mount
             onMounted(() => {

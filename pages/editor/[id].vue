@@ -14,7 +14,6 @@ try{
   const mysql = await useMysql()
 
   const res = await mysql.query('SELECT 1;')
-  console.log(res);
  
 
   if(res.success){
@@ -25,7 +24,6 @@ try{
 }catch{
   success.value = false
 }
-console.log(choice);
 
 </script>
 

@@ -23,3 +23,10 @@ const MYSQL_API: MysqlApiProps = {
 }
 
 contextBridge.exposeInMainWorld('mysql', MYSQL_API)
+
+const updateApi = {
+    check: () => ipcRenderer.invoke('update/check'),
+    run: () => ipcRenderer.invoke('update/run')
+}
+
+contextBridge.exposeInMainWorld('update',updateApi )

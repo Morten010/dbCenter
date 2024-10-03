@@ -20,7 +20,6 @@ export const CheckStatus = async (volumeId: string) => {
         const containers = AllContainers.filter(c => {
             let pass = false
             for(const mount of c.Mounts){
-                console.log(mount.Name);
                 if(mount.Name?.includes('database-center')){
                     pass = true
                 }
@@ -28,11 +27,8 @@ export const CheckStatus = async (volumeId: string) => {
 
             return pass
         })
-        console.log(`containers: ${containers.length}`);
-        console.log(containers);
         
         for(const container of containers){
-            console.log(container.State);
             if(container.State !== 'running'){
                 const c = docker.getContainer(container.Id)
 
@@ -42,19 +38,14 @@ export const CheckStatus = async (volumeId: string) => {
             
             for(const mount of container.Mounts){
                 if(mount.Name === volumeId){
-                    console.log('ON');
                     return 'ON'
                 }
             }
         }
-        console.log('OFF');
         
         return 'OFF'
     } catch (err) {
-        console.log('----- err\n');
         console.log(err);
-        console.log('----- err\n');
-        
     }
     
     

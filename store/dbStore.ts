@@ -54,10 +54,6 @@ export const useDbStore = defineStore('dbStore', {
             
             const res = await useDocker.createMysqlContainer(JSON.stringify(db)) 
             
-            console.log('-------- res \n');
-            console.log(res.success);
-            console.log('-------- res \n');
-            
             if(!res.success) return toast.error(res.message)
 
             toast.success('Successfully created database💥')
@@ -158,8 +154,6 @@ export const useDbStore = defineStore('dbStore', {
 
             const res = await useDocker.deleteMysqlContainer(payload)
 
-            console.log(res);
-            
             if(!res.success) return toast.error('Failed to delete database😵')
 
             toast.success('Successfully deleted🥇')
