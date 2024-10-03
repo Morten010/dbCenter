@@ -162,7 +162,6 @@ function initIpc() {
         message: 'Failed to download update'
       }
     }
-    return 
   })
 }
 
