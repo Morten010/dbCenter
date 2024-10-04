@@ -111,7 +111,7 @@ const handleCopyConnectionString = () => {
         v-if="database.status === 'on' && database.database === 'mysql'"
        >
         <NuxtLink
-          :href="true ? '#' : `/editor/${database.volumeName}`"
+          :href="false ? '#' : `/editor/${database.volumeName}`"
           class="text-[#8C8E98] opacity-50 cursor-not-allowed"
           disabled
         >

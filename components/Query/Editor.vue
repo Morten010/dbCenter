@@ -16,9 +16,12 @@ const {
 } = useRoute()
 const useDb = useDbStore()
 const query = useDb.getQuery(queryName, id as string)
-console.log(`Query: ${query}`);
-console.log(`Query name: ${queryName}`);
 
+const tableResponse = ref<null | {
+    data: any;
+    fields: any;
+    new: boolean;
+}>(null)
 const code = ref<string>(query || '')
 const loading = ref<boolean>(false)
 const messages = ref<{
@@ -26,6 +29,7 @@ const messages = ref<{
   time?: number
   // add more later if needed
 }[]>([])
+const tab = ref<'query' | 'result'>('query')
 
 const mysql = await useMysql()
 
@@ -63,6 +67,18 @@ const handleRunQuery = async () => {
       time: second - first
     }
   ]
+  if(res.success){
+    res.fields
+    res.data
+    console.log(res.fields);
+    console.log(res.data);
+    
+    tableResponse.value = {
+      data: res.data,
+      fields: res.fields,
+      new: true
+    }
+  }
   
   loading.value = false;
 }
@@ -105,22 +121,39 @@ onUnmounted(() => {
 
     <!-- query info screen -->
     <div
-      class="bottom-0 right-0 h-[30%] max-h-[300px] overflow-auto max-w-[calc(100vw-200px)] border-t w-full border-border "
+      :class="cn(
+        'bottom-0 right-0 h-[200px] max-h-[200px] max-w-[calc(100vw-200px)] overflow-auto border-t w-full border-border flex flex-col',
+      )"
+      v-if="messages.length"
     >
       <div
-        v-for="(msg, index) in [...messages].reverse()"
-        :class="cn(
-          'text-sm p-2 border-b border-border text-[#a0a4a5] flex justify-between'
-        )"
+        class="border-b border-border flex bg-primary/5 "
       >
-        <p>
-            {{ messages.length - index }}. {{ msg.message }}
-        </p>
-        <p
-          v-if="msg?.time"
+        <div
+          class="border-r border-border  py-1 px-4 cursor-pointer hover:bg-primary/10 hover:text-primary transition-all duration-100 font-medium"
+          @click="tab = 'query'"
         >
-          {{ msg.time?.toFixed(2) }} ms
-        </p>
+          Query
+        </div>
+        <div
+          class="border-r border-border  py-1 px-4 cursor-pointer hover:bg-primary/10 hover:text-primary transition-all duration-100 font-medium"
+          @click="tab = 'result'"
+        >
+          Result
+        </div>
+      </div>
+      <QueryMessages 
+        :messages="messages"
+        v-if="tab === 'query'"
+      />
+      <div
+        class="max-w-[calc(100vw-200px)] max-h-[calc(300px-33px)] overflow-auto"
+      >
+        <QueryTable 
+          :columns="tableResponse?.fields"
+          :rows="tableResponse?.data"
+          v-if="tab === 'result'"
+        />
       </div>
     </div>
     <!-- query info screen -->
