@@ -1,14 +1,14 @@
 import type { databaseStoreProps } from "~/types/store";
-import Docker from "dockerode";
+import Docker from 'dockerode';
+import { convertToKebabCase } from "../../functions/convertToKebabCase";
 
-const docker = new Docker();
+const docker = new Docker()
 
-const StartMysqlDatabase = async (db: databaseStoreProps) => {
-    // Create container
+export const startMysqlDatabase = async (db: databaseStoreProps) => {
     try {
         const container = await docker.createContainer({
             Image: 'mysql:latest',
-            name: db.name as string,
+            name: convertToKebabCase(db.name as string),
             Env: [
                 `MYSQL_ROOT_PASSWORD=${db.password}`, // Root password
                 `MYSQL_DATABASE=tables`,         // Database name
@@ -47,5 +47,3 @@ const StartMysqlDatabase = async (db: databaseStoreProps) => {
         }
     }
 }
-
-export default StartMysqlDatabase

@@ -2,11 +2,11 @@ import type Dockerode from "dockerode";
 import type { databaseStoreProps } from "./store";
 
 export type DockerApiProps = {
-    stopContainer: (volumeName: string) => Promise<{
+    stopDatabase: (volumeName: string) => Promise<{
         success: boolean,
         message: string
     }>;
-    startContainer: (db: string) => Promise<{
+    startDatabase: (db: string) => Promise<{
         success: true;
         message: string;
         data: {
@@ -17,7 +17,7 @@ export type DockerApiProps = {
         message: string;
         error: string;
     }>;
-    createMysqlContainer: (payload: string) => Promise<{
+    createDatabase: (payload: string) => Promise<{
         data: {
             volumeName: string
         },
@@ -38,9 +38,14 @@ export type DockerApiProps = {
     sync: (volumeId: string) => Promise<any>
 }
 
-export type CreateMysqlPayload = {
+export type CreateDatabasePayload = {
     databaseName: string;
-    databasePort: number;
+    databasePort: string;
     databasePassword: string;
     databaseUser: string;
+    database: string;
+    version: {
+        title: string;
+        value: string;
+    };
 }

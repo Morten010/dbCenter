@@ -1,5 +1,5 @@
 import { toast } from "vue-sonner"
-import type { CreateMysqlPayload } from "~/types/dockerApi"
+import type { CreateDatabasePayload } from "~/types/dockerApi"
 import type { databaseStoreProps } from "~/types/store"
 
 export const useDbStore = defineStore('dbStore', {
@@ -50,21 +50,24 @@ export const useDbStore = defineStore('dbStore', {
             })
 
         },
-        async addDatabase(db: CreateMysqlPayload) {
+        async addDatabase(db: CreateDatabasePayload) {
             
-            const res = await useDocker.createMysqlContainer(JSON.stringify(db)) 
+            const res = await useDocker.createDatabase(JSON.stringify(db)) 
             
-            if(!res.success) return toast.error(res.message)
+            if(!res.success) {
+                toast.error(res.message)
+                return false
+            }
 
             toast.success('Successfully created database💥')
              this.databases = [...this.databases, {
-                database: 'mysql',
+                database: db.database,
                 name: db.databaseName,
                 password: db.databasePassword,
                 port: db.databasePort.toString(),
                 status: 'off',
                 user: db.databaseUser,
-                version: '9.0.0',
+                version: db.version.value,
                 volumeName: res.data.volumeName,
                 containerId: null,
                 queries: []
@@ -85,7 +88,7 @@ export const useDbStore = defineStore('dbStore', {
             await new Promise(resolve => setTimeout(resolve, 1000))
 
 
-            const res =  await useDocker.startContainer(JSON.stringify(db))
+            const res =  await useDocker.startDatabase(JSON.stringify(db))
 
             if(!res.success) {
                 toast.error('failed to start database')
@@ -116,7 +119,7 @@ export const useDbStore = defineStore('dbStore', {
             })
 
 
-            const res = await useDocker.stopContainer(db.volumeName)
+            const res = await useDocker.stopDatabase(db.volumeName)
             
             if(!res.success) {
                 toast.error(res.message)

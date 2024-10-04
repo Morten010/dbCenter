@@ -5,6 +5,6 @@ Spin up a mysql databases easily and connect fast🚀
 
 ## Todo 
 
-- [ ] Add postgresql
+- [x] Add postgresql
 - [ ] Add redis database
-- [ ] Add vector database
+- [ ] Fix add database form, disable buttons and close on backdrop click while creating database

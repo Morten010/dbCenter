@@ -1,17 +1,17 @@
 import Docker from "dockerode";
-import { app, BrowserWindow, ipcMain, ipcRenderer } from "electron";
-import path from "path";
-import { createMysqlContainer } from "./docker/CreateMysqlContainer";
-import { deleteMysqlDatabase } from "./docker/DeleteMysqlDatabase";
-import { pingDocker } from "./docker/ping";
-import StartMysqlDatabase from "./docker/StartMysqlDatabase";
-import stopMysqlDatabase from "./docker/StopMysqlDatabase";
-import { allVolumes } from "./docker/allVolumes";
-import { readConfigFromVolume } from "./docker/getConfig";
-import type { databaseStoreProps } from "~/types/store";
+import { app, BrowserWindow, ipcMain } from "electron";
+import { autoUpdater } from "electron-updater";
 import mysql from 'mysql2/promise';
+import path from "path";
+import type { databaseStoreProps } from "~/types/store";
+import { allVolumes } from "./docker/allVolumes";
 import { CheckStatus } from "./docker/checkStatus";
-import { AppUpdater as _, autoUpdater } from "electron-updater"
+import { createDatabase } from "./docker/createDatabase";
+import { deleteMysqlDatabase } from "./docker/DeleteMysqlDatabase";
+import { readConfigFromVolume } from "./docker/getConfig";
+import { pingDocker } from "./docker/ping";
+import StartDatabase from "./docker/startDatabase";
+import stopMysqlDatabase from "./docker/StopMysqlDatabase";
 
 autoUpdater.autoDownload = false;
 
@@ -58,11 +58,11 @@ function initIpc() {
   ipcMain.handle('docker/ping', async () => {
     return pingDocker()
   })
-  ipcMain.handle('docker/create/mysql', async (_event, args) => {
-    return await createMysqlContainer(args)
+  ipcMain.handle('docker/create', async (_event, payload: string) => {
+    return await createDatabase(JSON.parse(payload))
   })
-  ipcMain.handle('docker/start/mysql', async (_event, payload: string) => {
-    return await StartMysqlDatabase(JSON.parse(payload))
+  ipcMain.handle('docker/start', async (_event, payload: string) => {
+    return await StartDatabase(JSON.parse(payload))
   })
   ipcMain.handle('docker/stop/mysql', async (_event, containerId) => {
     return await stopMysqlDatabase(containerId)
@@ -128,6 +128,11 @@ function initIpc() {
       const res = await autoUpdater.checkForUpdates()
       const currentVersion = app.getVersion()
 
+      if(!res) return {
+        success: false,
+        message: 'No update available',
+      }
+ 
       if (res?.updateInfo.version !== currentVersion) {
         return {
           success: true,

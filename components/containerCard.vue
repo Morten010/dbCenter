@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import type Dockerode from 'dockerode';
 import { toast } from 'vue-sonner';
 import { useDbStore } from '~/store/dbStore';
 import type { databaseStoreProps } from '~/types/store';
@@ -11,7 +10,19 @@ const { database } = defineProps<{
 const { startDatabase, stopDatabase, deleteDatabase } = useDbStore()
 
 const handleCopyConnectionString = () => {
-  navigator.clipboard.writeText(`mysql://${database.user}:${database.password}@127.0.0.1:${database.port}/tables`)
+  console.log(database);
+  console.log(database.database);
+  
+  if(database.database === 'mysql'){
+    navigator.clipboard.writeText(`mysql://${database.user}:${database.password}@127.0.0.1:${database.port}/tables`)
+  }
+  if(database.database === 'psql'){
+    navigator.clipboard.writeText(`postgresql://${database.user}:${database.password}@127.0.0.1:${database.port}`)
+  }
+  
+  if(database.database === 'redis'){
+    navigator.clipboard.writeText('not added yet')
+  }
   toast.success('Copied connection string to clipboard')
 }
 
@@ -28,7 +39,20 @@ const handleCopyConnectionString = () => {
           class="bg-[#122322] p-2 aspect-square w-12 grid place-content-center h-12 rounded"
         >
           <Icon 
+            v-if="database.database === 'mysql'"
             name="fontisto:mysql" 
+            class="text-primary"
+            size="38" 
+          />
+          <Icon 
+            v-if="database.database === 'psql'"
+            name="simple-icons:postgresql" 
+            class="text-primary"
+            size="38" 
+          />
+          <Icon 
+            v-if="database.database === 'redis'"
+            name="cib:redis" 
             class="text-primary"
             size="38" 
           />
@@ -42,7 +66,7 @@ const handleCopyConnectionString = () => {
           <p
             class="text-sm text-[#8C8E98]"
           >
-            Mysql {{ database.version }} @ {{ database.port }}
+            {{ database.database }} {{ database.version }} @ {{ database.port }}
           </p>
         </div>
 
@@ -84,10 +108,10 @@ const handleCopyConnectionString = () => {
       <!-- editor button -->
        <UiTooltip
         title="Coming soon"
-        v-if="database.status === 'on'"
+        v-if="database.status === 'on' && database.database === 'mysql'"
        >
         <NuxtLink
-          :href="false ? '#' : `/editor/${database.volumeName}`"
+          :href="true ? '#' : `/editor/${database.volumeName}`"
           class="text-[#8C8E98] opacity-50 cursor-not-allowed"
           disabled
         >
