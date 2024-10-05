@@ -5,9 +5,7 @@ const emit = defineEmits<{
     (event: 'pick', tableName: string): void 
 }>()
 
-const {
-    data
-} = await mysql.query('show tables;')
+const tables = mysql.liveQuery('show tables;')
 
 const handleClick = (tableName: string) => {
     emit('pick', tableName)
@@ -32,7 +30,7 @@ const handleClick = (tableName: string) => {
         class="pt-4 flex gap-x-4 gap-y-3 flex-wrap"
     >
         <div
-            v-for="table in data"
+            v-for="table in tables.data"
             class="rounded-lg overflow-hidden max-w-[200px] w-full min-w-[250px] border-border border bg-modal-bg group hover:border-primary/60 cursor-pointer transition-all duration-100 shadow-md"
             @click="() => handleClick(table.Tables_in_tables)"
         >
