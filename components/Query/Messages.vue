@@ -10,7 +10,7 @@ defineProps<{
 
 <template>
     <div
-      class="h-[200px] max-h-[200px]"
+      class="max-h-[calc(200px-33.5px)] min-h-[calc(200px-33.5px)] overflow-auto"
     >
       <div
         v-for="(msg, index) in [...messages].reverse()"

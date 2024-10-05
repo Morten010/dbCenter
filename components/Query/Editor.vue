@@ -147,7 +147,8 @@ onUnmounted(() => {
         v-if="tab === 'query'"
       />
       <div
-        class="max-w-[calc(100vw-200px)] max-h-[calc(300px-33px)] min-h-[calc(200px-33.5px)] overflow-auto"
+        class="max-w-[calc(100vw-200px)] max-h-[calc(200px-33.5px)] min-h-[calc(200px-33.5px)] overflow-auto"
+        v-if="tab === 'result'"
       >
         <QueryTable 
           :columns="tableResponse?.fields"

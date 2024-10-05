@@ -27,11 +27,11 @@ const handleClick = (tableName: string) => {
         Pick a table to view.
     </p>
     <div
-        class="pt-4 flex gap-x-4 gap-y-3 flex-wrap"
+        class="pt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 xl:grid-cols-4 2xl:grid-cols-5"
     >
         <div
             v-for="table in tables.data"
-            class="rounded-lg overflow-hidden max-w-[200px] w-full min-w-[250px] border-border border bg-modal-bg group hover:border-primary/60 cursor-pointer transition-all duration-100 shadow-md"
+            class="rounded-lg overflow-hidden w-full border-border border bg-modal-bg group hover:border-primary/60 cursor-pointer transition-all duration-100 shadow-md"
             @click="() => handleClick(table.Tables_in_tables)"
         >
             <div
