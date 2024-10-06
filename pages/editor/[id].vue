@@ -111,6 +111,9 @@ try{
 
           <!-- diagram -->
           <!-- https://vueflow.dev/ -->
+          <Diagram 
+            v-if="choice.view === 'diagram'"
+          />
           <!-- diagram -->
 
           <!-- query editor -->
