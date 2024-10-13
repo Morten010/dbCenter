@@ -1,0 +1,53 @@
+name: Build and Publish
+
+on:
+  push:
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [windows-latest]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      # Step to clean up node_modules and package-lock.json
+      - name: Clean install dependencies
+        run: |
+          rm -rf node_modules
+          rm -f package-lock.json
+        shell: bash # This step will run on macOS only
+
+      # Install dependencies for Windows
+      - name: Install dependencies (Windows)
+        if: runner.os == 'Windows'
+        run: npm install
+        shell: pwsh
+
+      # Rebuild native modules for Windows
+      - name: Rebuild native modules (Windows)
+        if: runner.os == 'Windows'
+        run: npm rebuild
+        shell: pwsh
+
+      - name: Build the project (Windows)
+        if: runner.os == 'Windows'
+        run: npm run build
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+
+      - name: Package and Publish (Windows)
+        if: runner.os == 'Windows'
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: npx electron-builder --win
+        shell: pwsh
