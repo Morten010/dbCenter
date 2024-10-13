@@ -22,7 +22,7 @@ jobs:
       # Step to clean up node_modules and package-lock.json
       - name: Clean install dependencies
         run: |
-          rRemove-Item -Recurse -Force node_modules
+          Remove-Item -Recurse -Force node_modules
           Remove-Item -Force package-lock.json
         shell: pwsh # This step will run on macOS only
 
