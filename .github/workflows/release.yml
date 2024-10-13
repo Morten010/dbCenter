@@ -28,34 +28,59 @@ jobs:
         run: |
           rm -rf node_modules
           rm -f package-lock.json
-        shell: bash # Use bash for all platforms
+        shell: bash # This step will run on macOS only
 
-      # Step to install dependencies
-      - name: Install dependencies
+      # Install dependencies for macOS
+      - name: Install dependencies (macOS)
+        if: runner.os == 'macOS'
         run: npm install
-        shell: ${{ runner.os == 'Windows' && 'powershell' || 'bash' }}
+        shell: bash
 
-      # Add this step for Windows to handle native module rebuilds
-      - name: Rebuild native modules
+      # Install dependencies for Windows
+      - name: Install dependencies (Windows)
+        if: runner.os == 'Windows'
+        run: npm install
+        shell: pwsh
+
+      # Rebuild native modules for macOS
+      - name: Rebuild native modules (macOS)
+        if: runner.os == 'macOS'
         run: npm rebuild
-        shell: ${{ runner.os == 'Windows' && 'powershell' || 'bash' }}
+        shell: bash
 
-      - name: Build the project
+      # Rebuild native modules for Windows
+      - name: Rebuild native modules (Windows)
+        if: runner.os == 'Windows'
+        run: npm rebuild
+        shell: pwsh
+
+      - name: Build the project (macOS)
+        if: runner.os == 'macOS'
         run: npm run build
-        shell: ${{ runner.os == 'Windows' && 'powershell' || 'bash' }}
+        shell: bash
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
 
-      - name: Package and Publish
+      - name: Build the project (Windows)
+        if: runner.os == 'Windows'
+        run: npm run build
+        shell: pwsh
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
-        run: |
-          if [ "${{ runner.os }}" == "Windows" ]; then
-            npx electron-builder --win --publish always
-          elif [ "${{ runner.os }}" == "macOS" ]; then
-            npx electron-builder --mac --publish always
-          fi
-        shell: ${{ runner.os == 'Windows' && 'powershell' || 'bash' }}
+
+      - name: Package and Publish (macOS)
+        if: runner.os == 'macOS'
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: npx electron-builder --mac --publish always
+        shell: bash
+
+      - name: Package and Publish (Windows)
+        if: runner.os == 'Windows'
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: npx electron-builder --win --publish always
+        shell: pwsh
 
   release:
     needs: build
