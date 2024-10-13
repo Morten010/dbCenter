@@ -23,9 +23,6 @@ jobs:
           node-version: 20
           cache: 'npm'
 
-      - name: Clean npm cache
-        run: npm cache clean --force
-
       # Step to clean up node_modules and package-lock.json
       - name: Clean install dependencies
         run: |
@@ -36,20 +33,16 @@ jobs:
       # Step to install dependencies
       - name: Install dependencies
         run: npm install
-        shell: bash # Use bash for all platforms
+        shell: ${{ runner.os == 'Windows' && 'powershell' || 'bash' }}
 
       # Add this step for Windows to handle native module rebuilds
       - name: Rebuild native modules
         run: npm rebuild
-        shell: bash
-
-      - name: Rebuild native modules for Electron
-        run: npx electron-rebuild
-        shell: bash
+        shell: ${{ runner.os == 'Windows' && 'powershell' || 'bash' }}
 
       - name: Build the project
         run: npm run build
-        shell: bash # Use bash for all platforms
+        shell: ${{ runner.os == 'Windows' && 'powershell' || 'bash' }}
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
 
@@ -62,7 +55,7 @@ jobs:
           elif [ "${{ runner.os }}" == "macOS" ]; then
             npx electron-builder --mac --publish always
           fi
-        shell: bash # Use bash for all platforms
+        shell: ${{ runner.os == 'Windows' && 'powershell' || 'bash' }}
 
   release:
     needs: build
