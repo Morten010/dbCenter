@@ -10,12 +10,21 @@ export default defineNuxtConfig({
     '@pinia/nuxt',
     '@vueuse/nuxt',
     '@nuxt/image',
-  ], 
+  ],
   devtools: { enabled: false },
   electron: electronConfig,
   ssr: false,
   alias: {
     pinia: "/node_modules/@pinia/nuxt/node_modules/pinia/dist/pinia.mjs"
+  },
+  build: {
+    extend(config, { isDev, isClient }) {
+      // Add the node-loader for .node files
+      config.module.rules.push({
+        test: /\.node$/,
+        loader: 'node-loader',
+      });
+    },
   },
   experimental: {
     appManifest: false,
