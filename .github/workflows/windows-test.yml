@@ -22,31 +22,27 @@ jobs:
       # Step to clean up node_modules and package-lock.json
       - name: Clean install dependencies
         run: |
-          rm -rf node_modules
-          rm -f package-lock.json
-        shell: bash # This step will run on macOS only
+          rRemove-Item -Recurse -Force node_modules
+          Remove-Item -Force package-lock.json
+        shell: pwsh # This step will run on macOS only
 
       # Install dependencies for Windows
       - name: Install dependencies (Windows)
-        if: runner.os == 'Windows'
         run: npm install
         shell: pwsh
 
       # Rebuild native modules for Windows
       - name: Rebuild native modules (Windows)
-        if: runner.os == 'Windows'
         run: npm rebuild
         shell: pwsh
 
       - name: Build the project (Windows)
-        if: runner.os == 'Windows'
         run: npm run build
         shell: pwsh
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
 
       - name: Package and Publish (Windows)
-        if: runner.os == 'Windows'
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: npx electron-builder --win
