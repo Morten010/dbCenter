@@ -33,5 +33,13 @@
     "perMachine": false,
     "allowToChangeInstallationDirectory": true,
     "deleteAppDataOnUninstall": false
+  },
+  "build": {
+    "extraResources": [
+      {
+        "from": "node_modules/ssh2/lib/protocol/crypto/build/Release/sshcrypto.node",
+        "to": "path/in/built/app"
+      }
+    ]
   }
 }
