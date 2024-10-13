@@ -1,4 +1,5 @@
 import { electronConfig } from "./configs/Electron";
+import { extendWebpackConfig } from '@nuxt/kit'
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
@@ -18,13 +19,13 @@ export default defineNuxtConfig({
     pinia: "/node_modules/@pinia/nuxt/node_modules/pinia/dist/pinia.mjs"
   },
   build: {
-    extend(config, { isDev, isClient }) {
-      // Add the node-loader for .node files
+    extendWebpackConfig(config) {
+      // Add a rule to handle .node files
       config.module.rules.push({
         test: /\.node$/,
-        loader: 'node-loader',
-      });
-    },
+        use: 'node-loader' // or 'native-loader' depending on your setup
+      })
+    }
   },
   experimental: {
     appManifest: false,
@@ -35,12 +36,4 @@ export default defineNuxtConfig({
       hashMode: true, // prevent app from starting on 404 page
     },
   },
-  setup() {
-    extendWebpackConfig((config) => {
-      config.module?.rules.push({
-        test: /\.txt$/,
-        use: 'raw-loader'
-      })
-    })
-  }
 })
