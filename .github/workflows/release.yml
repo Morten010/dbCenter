@@ -23,8 +23,12 @@ jobs:
       # Clean up node_modules and package-lock.json
       - name: Clean install dependencies
         run: |
-          Remove-Item -Recurse -Force node_modules
-          Remove-Item -Force package-lock.json
+          if (Test-Path -Path node_modules) {
+            Remove-Item -Recurse -Force node_modules
+          }
+          if (Test-Path -Path package-lock.json) {
+            Remove-Item -Force package-lock.json
+          }
         shell: pwsh
 
       # Install dependencies
@@ -65,8 +69,12 @@ jobs:
       # Clean up node_modules and package-lock.json
       - name: Clean install dependencies
         run: |
-          rm -rf node_modules
-          rm -f package-lock.json
+          if [ -d "node_modules" ]; then
+            rm -rf node_modules
+          fi
+          if [ -f "package-lock.json" ]; then
+            rm -f package-lock.json
+          fi
         shell: bash
 
       # Install dependencies
