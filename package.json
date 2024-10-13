@@ -11,7 +11,7 @@
     "releaseType": "release"
   },
   "private": true,
-  "version": "0.1.7",
+  "version": "0.1.8",
   "type": "commonjs",
   "main": "dist-electron/main.js",
   "scripts": {

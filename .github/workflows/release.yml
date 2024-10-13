@@ -1,0 +1,76 @@
+name: Build and Publish
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [windows-latest, macos-latest]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      # Step to clean up node_modules and package-lock.json
+      - name: Clean install dependencies
+        run: |
+          rm -rf node_modules
+          rm -f package-lock.json
+        shell: bash # Use bash for all platforms
+
+      # Step to install dependencies
+      - name: Install dependencies
+        run: npm install
+        shell: bash # Use bash for all platforms
+
+      # Add this step for Windows to handle native module rebuilds
+      - name: Rebuild native modules (Windows only)
+        if: runner.os == 'Windows'
+        run: npm rebuild
+        shell: pwsh
+
+      - name: Build the project
+        run: npm run build
+        shell: bash # Use bash for all platforms
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+
+      - name: Package and Publish
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: |
+          if [ "${{ runner.os }}" == "Windows" ]; then
+            npx electron-builder --win --publish always
+          elif [ "${{ runner.os }}" == "macOS" ]; then
+            npx electron-builder --mac --publish always
+          fi
+        shell: bash # Use bash for all platforms
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Create a release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: false
+          prerelease: false
