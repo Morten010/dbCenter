@@ -13,7 +13,8 @@
     "artifactName": "${productName}_${version}.${ext}",
     "target": [
       "dmg"
-    ]
+    ],
+    "publish": ["github"]
   },
   "win": {
     "publish": ["github"],

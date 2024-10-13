@@ -10,7 +10,7 @@ export default defineNuxtConfig({
     '@pinia/nuxt',
     '@vueuse/nuxt',
     '@nuxt/image',
-  ], 
+  ],
   devtools: { enabled: false },
   electron: electronConfig,
   ssr: false,

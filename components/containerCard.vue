@@ -107,12 +107,12 @@ const handleCopyConnectionString = () => {
     >
       <!-- editor button -->
        <UiTooltip
-        title="Coming soon"
+        title="Database Studio"
         v-if="database.status === 'on' && database.database === 'mysql'"
        >
         <NuxtLink
-          :href="false ? '#' : `/editor/${database.volumeName}`"
-          class="text-[#8C8E98] opacity-50 cursor-not-allowed"
+          :href="`/editor/${database.volumeName}`"
+          class="text-[#8C8E98] hover:text-[#e7e7e8] transition-colors duration-100"
           disabled
         >
           <Icon 
@@ -128,7 +128,7 @@ const handleCopyConnectionString = () => {
         title="Delete database"
       >
         <button 
-          class="text-[#8C8E98] hover:text-[#e7e7e8]"
+          class="text-[#8C8E98] hover:text-[#e7e7e8] transition-colors duration-100"
           @click="deleteDatabase(database.volumeName)"
         >
           <Icon 
@@ -144,7 +144,7 @@ const handleCopyConnectionString = () => {
         title="Copy connection string"
       >
         <button 
-          class="text-[#8C8E98] hover:text-[#e7e7e8]"
+          class="text-[#8C8E98] hover:text-[#e7e7e8] transition-colors duration-100"
           @click="handleCopyConnectionString"
         >
           <Icon 
@@ -160,7 +160,7 @@ const handleCopyConnectionString = () => {
         :title="database.status === 'loading' ? 'Loading...' : database.status === 'on' ? 'Shutdown database' : 'Start database'"
       >
         <button 
-          class="text-[#8C8E98] hover:text-[#e7e7e8]"
+          class="text-[#8C8E98] hover:text-[#e7e7e8] transition-colors duration-100"
           @click="() => database.status === 'off' ? startDatabase(database.volumeName) : stopDatabase(database.containerId!)"
           :disabled="database.status === 'loading'"
         >

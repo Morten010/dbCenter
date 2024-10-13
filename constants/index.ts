@@ -25,10 +25,10 @@ export const databaseChoicesConst = [
         name: 'psql',
         icon: 'simple-icons:postgresql'
     },
-    {
-        name: 'redis',
-        icon: 'cib:redis'
-    }
+    // {
+    //     name: 'redis',
+    //     icon: 'cib:redis'
+    // }
 ]
 
 export const databaseVersionConst = {
