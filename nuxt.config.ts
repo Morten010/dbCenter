@@ -35,4 +35,12 @@ export default defineNuxtConfig({
       hashMode: true, // prevent app from starting on 404 page
     },
   },
+  setup() {
+    extendWebpackConfig((config) => {
+      config.module?.rules.push({
+        test: /\.txt$/,
+        use: 'raw-loader'
+      })
+    })
+  }
 })
