@@ -19,13 +19,6 @@ jobs:
           node-version: 20
           cache: 'npm'
 
-      # Step to clean up node_modules and package-lock.json
-      - name: Clean install dependencies
-        run: |
-          Remove-Item -Recurse -Force node_modules
-          Remove-Item -Force package-lock.json
-        shell: pwsh # This step will run on macOS only
-
       # Install dependencies for Windows
       - name: Install dependencies (Windows)
         run: npm install
