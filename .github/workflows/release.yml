@@ -23,6 +23,9 @@ jobs:
           node-version: 20
           cache: 'npm'
 
+      - name: Clean npm cache
+        run: npm cache clean --force
+
       # Step to clean up node_modules and package-lock.json
       - name: Clean install dependencies
         run: |
@@ -36,10 +39,13 @@ jobs:
         shell: bash # Use bash for all platforms
 
       # Add this step for Windows to handle native module rebuilds
-      - name: Rebuild native modules (Windows only)
-        if: runner.os == 'Windows'
+      - name: Rebuild native modules
         run: npm rebuild
-        shell: pwsh
+        shell: bash
+
+      - name: Rebuild native modules for Electron
+        run: npx electron-rebuild
+        shell: bash
 
       - name: Build the project
         run: npm run build
