@@ -122,7 +122,11 @@ const handleSubmit = async (e: Event) => {
                         v-for="db in databaseChoicesConst"
                         :icon="db.icon"
                         :name="db.name"
-                        @clear-versions="dbFormData.version = null"
+                        @clear-versions="() => {
+                            dbFormData.version = null
+                            if(dbFormData.database === 'mysql') return dbFormData.databasePort = 3306
+                            if(dbFormData.database === 'psql') return dbFormData.databasePort = 5432
+                        }"
                     />
                 </div>
 

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { toast } from 'vue-sonner';
-import DatabaseExpanded from '~/components/Create/DatabaseExpanded.vue';
+import DatabaseExpanded from '~/components/Create/Database.vue';
 import { useDbStore } from '~/store/dbStore';
 const update = ref<{
   message: string,
@@ -119,6 +119,6 @@ const handleUpdate = () => {
       </p>
     </div>
 
-    <CreateDatabaseExpanded />
+    <CreateDatabase />
   </div>
 </template>

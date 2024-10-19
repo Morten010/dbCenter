@@ -25,8 +25,7 @@ export const useDbStore = defineStore('dbStore', {
         },
         allQueries: (state => {
             return (volumeId: string) => {
-                const db = state.databases.find(db => db.volumeName == volumeId)
-                return db?.queries || []
+                return state.databases.find(db => db.volumeName == volumeId)?.queries
             } 
         })
     },
@@ -182,21 +181,18 @@ export const useDbStore = defineStore('dbStore', {
             name: string;
             volumeId: string
         }) {
+            const db = this.getSpecificContainer(volumeId)
 
-            this.databases = [...this.databases].map(db => {
-                if(db.volumeName === volumeId){
-                    return {
-                        ...db,
-                        queries: [
-                            ...db?.queries,
-                            {
-                                name,
-                                query
-                            }
-                        ]
+            if(!db) return toast.error('Failed to save query.')
+            this.updateDatabase({
+                ...db,
+                queries: [
+                    ...db.queries,
+                    {
+                        query,
+                        name
                     }
-                }
-                return db
+                ]
             })
         },
         removeQuery() {

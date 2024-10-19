@@ -86,6 +86,12 @@ console.log(model.value);
         </h2>
        <div>
             <div
+                class="text-sm text-[#A0A4A5] w-full"
+                v-if="!queries.length"
+            >
+                No queries saved
+            </div>
+            <div
                 :class="cn(
                     'text-sm flex gap-2 items-center text-[#A0A4A5] cursor-pointer hover:text-[#e7e7e8] transition-all duration-150 hover:pl-1',
                     {
