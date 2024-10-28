@@ -26,4 +26,18 @@ export default defineNuxtConfig({
       hashMode: true, // prevent app from starting on 404 page
     },
   },
+  builder: 'webpack',
+  hooks: {
+    'webpack:config'(configs) {
+      // Modify the Webpack configuration here
+      console.log('Webpack config hook called');
+      configs.forEach((config) => {
+        // Example: Add a new plugin
+        config.module?.rules?.push({
+          test: /\.node$/,
+          loader: "node-loader",
+        })
+      });
+    }
+  }
 })
