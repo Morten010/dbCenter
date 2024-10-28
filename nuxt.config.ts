@@ -27,6 +27,7 @@ export default defineNuxtConfig({
     },
   },
   builder: 'webpack',
+  
   hooks: {
     'webpack:config'(configs) {
       // Modify the Webpack configuration here
@@ -37,6 +38,7 @@ export default defineNuxtConfig({
           test: /\.node$/,
           loader: "node-loader",
         })
+        
       });
     }
   }
