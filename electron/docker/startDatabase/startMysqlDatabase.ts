@@ -7,7 +7,7 @@ const docker = new Docker()
 export const startMysqlDatabase = async (db: databaseStoreProps) => {
     try {
         const container = await docker.createContainer({
-            Image: 'mysql:latest',
+            Image: `mysql:${db.version}`,
             name: convertToKebabCase(db.name as string),
             Env: [
                 `MYSQL_ROOT_PASSWORD=${db.password}`, // Root password
