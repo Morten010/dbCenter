@@ -18,7 +18,6 @@
   },
   "win": {
     "publish": ["github"],
-    "icon": "./assets/favicon.ico",
     "target": [
       {
         "target": "nsis",

@@ -35,7 +35,7 @@ export default defineNuxtConfig({
         // Example: Add a new plugin
         config.module?.rules?.push({
           test: /\.node$/,
-          use: "node-loader",
+          loader: "node-loader",
         })
       });
     }
